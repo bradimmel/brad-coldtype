@@ -1,2 +1,2 @@
 # brad-coldtype
-run with: coldtype myStuff/filename
+run with: coldtype animations/filename
