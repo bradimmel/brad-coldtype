@@ -95,11 +95,10 @@ def pz2(f):
     # override
     secondHalfFrame = 438
 
-    secondHalfFrame = shifter.note.on
+    # secondHalfFrame = shifter.note.on
+    # print(secondHalfFrame)
 
-
-    print(secondHalfFrame)
-
+    # make produce zoos appear when shifter starts
     if (f.i > secondHalfFrame):
         pzScale = 0.1
     else:
