@@ -13,22 +13,25 @@ wav = __sibling__("../demos/pz2/pz2_amp.wav")
 audio = Wavfile("demos/pz2/pz2_amp.wav")
 
 wSize = 1500
-
-
+starCount = 100
+starPoints = []
+starSize = 5
+for i in range(starCount):
+    starPoints.append((pyRandom.randint(0,wSize-starSize),(pyRandom.randint(0,wSize-starSize))))
+    
 @animation((wSize,wSize), duration=drums.duration, audio=wav)
 def spaceflight(f):
     # kick = drums.fv(f.i, [36], [5, 50])
-    
+    global starCount
     amp = audio.amp(f.i)
 
-    starSize = 5
-    starCount = 100
+    global starSize
     starWarpSpeedSize = amp*100
     focalPoint = (f.a.r.mxx/2,f.a.r.mxy/2)
     deadSpotRad = 200
     stars = DATPens()
     for i in range(starCount):
-        starRect = Rect([pyRandom.randint(0,f.a.r.mxy-starSize), pyRandom.randint(0,f.a.r.mxx-starSize), starSize, starSize+starWarpSpeedSize])
+        starRect = Rect([starPoints[i][0], starPoints[i][1], starSize, starSize+starWarpSpeedSize])
         # todo: replace box w circle
         if (starRect.x-focalPoint[0]) == 0 or (-deadSpotRad < (starRect.x-focalPoint[0]) < deadSpotRad and -deadSpotRad < (starRect.y-focalPoint[1]) < deadSpotRad):
             continue
