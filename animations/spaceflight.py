@@ -33,23 +33,33 @@ def spaceflight(f):
     # todo: interpolate/smooth
     amp = audio.amp(f.i)
     starWarpSpeedSize = amp*200
-    focalPoint = (f.a.r.mxx/2,f.a.r.mxy/2)
+    center = (f.a.r.mxx/2,f.a.r.mxy/2)
+    focalPoint = (center[0]+0, center[1]+0)
     # should probably just define as a Rect eventually?
-    deadSpotRadx = 300
-    deadSpotRady = 100
+    deadSpotRadx = 00
+    deadSpotRady = 00
     stars = DATPens()
+
 
     for i in range(starCount):
         starPointx = starPoints[i][0]
         starPointy = starPoints[i][1]
-        starRect = Rect([starPointx, starPointy, starSize, starSize+starWarpSpeedSize])
+
+        relativePos = [(starPointx-focalPoint[0]), (starPointy-focalPoint[1])]
+        starDistance = math.hypot(relativePos[0], relativePos[1])
+        
+        starDistDistort = (starSize + (starWarpSpeedSize*starDistance/200))*.5
+        # safety against inversion
+        if (starDistDistort - starSize) < 0:
+            starDistDistort = starSize
+
+        starRect = Rect([starPointx, starPointy, starSize, starDistDistort])
 
         # todo: replace box w circle
         # divide by 0 safety and deadspot logic
         if (starPointx-focalPoint[0]) == 0 or (-deadSpotRadx < (starPointx-focalPoint[0]) < deadSpotRadx and -deadSpotRady < (starPointy-focalPoint[1]) < deadSpotRady):
             continue
 
-        relativePos = [(starPointx-focalPoint[0]), (starPointy-focalPoint[1])]
 
         # todo: better math with tan to get accurate sign?
         if relativePos[0] <= 0:
