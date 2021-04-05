@@ -5,7 +5,7 @@ from coldtype.warping import warp_fn
 from coldtype.time.audio import Wavfile
 
 myFont = Font("assets/Secuela-Italic-v_1_787-TTF-VF.ttf")
-drums = MidiReader("demos/pz2/pz2_MIDI_new.mid", duration=750, bpm=82, fps=30)[0]
+drums = MidiReader("demos/pz2/pz2_MIDI_new.mid", duration=900, bpm=82, fps=30)[0]
 # wav playing still doesn't work yet
 wav = __sibling__("../demos/pz2/pz2_amp.wav")
 audio = Wavfile("demos/pz2/pz2_amp.wav")
@@ -17,14 +17,17 @@ wSize = 1500
 def pz2(f):
     kick = drums.fv(f.i, [36], [5, 50])
     snare = drums.fv(f.i, [38], [10, 50])
-    contract = drums.fv(f.i, [34], [5, 200])
-    shifter = drums.fv(f.i-5, [40], [5, 5])
-    hat1 = drums.fv(f.i, [42], [10, 10])
-    hat2 = drums.fv(f.i, [43], [10, 10])
-    hat3 = drums.fv(f.i, [44], [10, 10])
-    hat4 = drums.fv(f.i, [45], [10, 10])
-    synth1 = drums.fv(f.i, [48], [10, 10])
-    synth2 = drums.fv(f.i, [49], [10, 10])
+    contract = drums.fv(f.i, [34], [10, 200])
+    shifter = drums.fv(f.i-5, [40], [5, 5])     # , accumulate=1)
+    # hat1 = drums.fv(f.i, [42], [10, 10])
+    # hat2 = drums.fv(f.i, [43], [10, 10])
+    # hat3 = drums.fv(f.i, [44], [10, 10])
+    # hat4 = drums.fv(f.i, [45], [10, 10])
+    # synth1 = drums.fv(f.i, [48], [10, 10])
+    # synth2 = drums.fv(f.i, [49], [10, 10])
+
+    # print(">", f.i, snare)
+    # return None
     
     produceZooColor = hsl(0.72, 0.5, .52)
     pzScale = 0
@@ -67,20 +70,20 @@ def pz2(f):
             return x+10, y
 
 
-    amoeba[0][3].map_points(move_O_center)
-    amoeba[1][6].map_points(move_O_center)
-    amoeba[0][1].map_points(move_B_centers)
+    amoeba[0][2].map_points(move_O_center)
+    amoeba[1][1].map_points(move_O_center)
+    amoeba[0][4].map_points(move_B_centers)
 
-    amoeba2[0][3].map_points(move_O_center)
-    amoeba2[1][6].map_points(move_O_center)
-    amoeba2[0][1].map_points(move_B_centers)
+    amoeba2[0][2].map_points(move_O_center)
+    amoeba2[1][1].map_points(move_O_center)
+    amoeba2[0][4].map_points(move_B_centers)
 
-    amoeba3[0][3].map_points(move_O_center)
-    amoeba3[1][6].map_points(move_O_center)
-    amoeba3[0][1].map_points(move_B_centers)
+    amoeba3[0][2].map_points(move_O_center)
+    amoeba3[1][1].map_points(move_O_center)
+    amoeba3[0][4].map_points(move_B_centers)
 
-    amoeba2[1][4].map_points(shift_dot)
-    amoeba3[1][4].map_points(shift_dot)
+    amoeba2[1][3].map_points(shift_dot)
+    amoeba3[1][3].map_points(shift_dot)
 
 
     # background
@@ -95,11 +98,10 @@ def pz2(f):
     # override
     secondHalfFrame = 438
 
-    secondHalfFrame = shifter.note.on
+    # secondHalfFrame = shifter.note.on
+    # print(secondHalfFrame)
 
-
-    print(secondHalfFrame)
-
+    # make produce zoos appear when shifter starts
     if (f.i > secondHalfFrame):
         pzScale = 0.1
     else:
