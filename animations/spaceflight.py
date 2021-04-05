@@ -26,22 +26,34 @@ def spaceflight(f):
     amp = audio.amp(f.i)
 
     global starSize
-    starWarpSpeedSize = amp*100
+    starWarpSpeedSize = amp*200
     focalPoint = (f.a.r.mxx/2,f.a.r.mxy/2)
     deadSpotRad = 200
     stars = DATPens()
-    for i in range(starCount):
-        starRect = Rect([starPoints[i][0], starPoints[i][1], starSize, starSize+starWarpSpeedSize])
-        # todo: replace box w circle
-        if (starRect.x-focalPoint[0]) == 0 or (-deadSpotRad < (starRect.x-focalPoint[0]) < deadSpotRad and -deadSpotRad < (starRect.y-focalPoint[1]) < deadSpotRad):
-            continue
-        starOrient = math.degrees(math.atan((starRect.y-focalPoint[1])/(starRect.x-focalPoint[0])))-90
 
+    for i in range(starCount):
+        starPointx = starPoints[i][0]
+        starPointy = starPoints[i][1]
+        starRect = Rect([starPointx, starPointy, starSize, starSize+starWarpSpeedSize])
+
+        # todo: replace box w circle
+        # divide by 0 safety and deadspot logic
+        if (starPointx-focalPoint[0]) == 0 or (-deadSpotRad < (starPointx-focalPoint[0]) < deadSpotRad and -deadSpotRad < (starPointy-focalPoint[1]) < deadSpotRad):
+            continue
+
+        relativePos = [(starPointx-focalPoint[0]), (starPointy-focalPoint[1])]
+
+        # todo: better math with tan to get accurate sign?
+        if relativePos[0] <= 0:
+            starOrient = math.degrees(math.atan(relativePos[1]/relativePos[0]))+90
+        else:
+            starOrient = math.degrees(math.atan(relativePos[1]/relativePos[0]))-90
+        
         stars.append(
             DATPen()
             .rect(starRect)
             .f(hsl(1,1,1))
-            .rotate(starOrient)
+            .rotate(starOrient, point = Point(starPointx, starPointy))      # makes it grow only outward 
         )
 
 
