@@ -6,6 +6,7 @@ from coldtype.time.audio import Wavfile
 import random as pyRandom
 import math
 
+# todo: change font
 myFont = Font("assets/Secuela-Italic-v_1_787-TTF-VF.ttf")
 drums = MidiReader("demos/pz2/pz2_MIDI_new.mid", duration=100, bpm=82, fps=30)[0]
 # wav playing still doesn't work yet
@@ -22,13 +23,20 @@ for i in range(starCount):
 @animation((wSize,wSize), duration=drums.duration, audio=wav)
 def spaceflight(f):
     # kick = drums.fv(f.i, [36], [5, 50])
+    
+    ################
+    # stars
+    ################
     global starCount
-    amp = audio.amp(f.i)
-
     global starSize
+
+    # todo: interpolate/smooth
+    amp = audio.amp(f.i)
     starWarpSpeedSize = amp*200
     focalPoint = (f.a.r.mxx/2,f.a.r.mxy/2)
-    deadSpotRad = 200
+    # should probably just define as a Rect eventually?
+    deadSpotRadx = 300
+    deadSpotRady = 100
     stars = DATPens()
 
     for i in range(starCount):
@@ -38,7 +46,7 @@ def spaceflight(f):
 
         # todo: replace box w circle
         # divide by 0 safety and deadspot logic
-        if (starPointx-focalPoint[0]) == 0 or (-deadSpotRad < (starPointx-focalPoint[0]) < deadSpotRad and -deadSpotRad < (starPointy-focalPoint[1]) < deadSpotRad):
+        if (starPointx-focalPoint[0]) == 0 or (-deadSpotRadx < (starPointx-focalPoint[0]) < deadSpotRadx and -deadSpotRady < (starPointy-focalPoint[1]) < deadSpotRady):
             continue
 
         relativePos = [(starPointx-focalPoint[0]), (starPointy-focalPoint[1])]
@@ -56,6 +64,23 @@ def spaceflight(f):
             .rotate(starOrient, point = Point(starPointx, starPointy))      # makes it grow only outward 
         )
 
+    ################
+    # text
+    ################
+
+    style = Style(myFont,
+        100,
+        tu=150,
+        )
+
+    myText = (Composer(f.a.r,
+        "SPACEFLIGHT",
+        style,
+        )
+        .pens()
+        .align(f.a.r)
+        .f(hsl(.3, 1, .5))
+        )
 
     return DATPens([
         # background
@@ -64,5 +89,7 @@ def spaceflight(f):
             .fill(hsl(0, 0, 0))),   # black
 
 
-        (stars)
+        (stars),
+
+        (myText)
     ])
