@@ -20,9 +20,11 @@ cumulativeAmp = 0
 starCount = 100
 starSize = 5
 starPointsInitial = []
+framesSinceLastGen = []
 for i in range(starCount):
     starPoints.append((pyRandom.randint(0,wSize-starSize),(pyRandom.randint(0,wSize-starSize))))
     starPointsInitial.append(starPoints[i])
+    framesSinceLastGen.append(0)
 
 @animation((wSize,wSize), duration=drums.duration, audio=wav)
 def spaceflight(f):
@@ -37,7 +39,7 @@ def spaceflight(f):
     global starPoints
     global starPointsInitial
     global cumulativeAmp
-    print(cumulativeAmp)
+    global framesSinceLastGen
 
 
     # todo: interpolate/smooth
@@ -54,8 +56,7 @@ def spaceflight(f):
     deadSpotRady = 00
     stars = DATPens()
 
-    moveSpeed = cumulativeAmp * 40     # later, implement some function of midi or amp. for now, 1
-    starPointsCopy = []
+    moveSpeed = cumulativeAmp * 2    # later, implement some function of midi or amp. for now, 1
 
     for i in range(starCount):
         starPointx = starPoints[i][0]
@@ -91,15 +92,13 @@ def spaceflight(f):
         )
 
         # forward motion
-        # todo: more efficient/clean? 
-        # if len(starPointsCopy) == starCount:
-        #     starPointsCopy.pop(i)
-        # starPointsCopy.insert(i, starPoints[i])
-        # starPoints.pop(i)
-        # starPoints.insert(i, ((starPointsCopy[i][0] + moveSpeed * starDistance/200 * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsCopy[i][1] + moveSpeed * starDistance/200 * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
-
         starPoints[i] = (((starPointsInitial[i][0] + moveSpeed * starDistance/200 * cumulativeAmp * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsInitial[i][1] + moveSpeed * starDistance/200 * cumulativeAmp * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
 
+        # out of bounds regen
+        if starPointx < -100 or starPointx > wSize + 100 or starPointy < -100 or starPointy > wSize + 100:
+            starPoints[i] = (pyRandom.randint(wSize/2 - 100,wSize/2+100),pyRandom.randint(wSize/2 - 100,wSize/2+100))
+            starPointsInitial[i] = starPoints[i]
+            framesSinceLastGen = f.i
     ################
     # text
     ################
