@@ -14,11 +14,15 @@ wav = __sibling__("../demos/pz2/pz2_amp.wav")
 audio = Wavfile("demos/pz2/pz2_amp.wav")
 
 wSize = 1500
-starCount = 100
 starPoints = []
+cumulativeAmp = 0
+
+starCount = 100
 starSize = 5
+starPointsInitial = []
 for i in range(starCount):
     starPoints.append((pyRandom.randint(0,wSize-starSize),(pyRandom.randint(0,wSize-starSize))))
+    starPointsInitial.append(starPoints[i])
 
 @animation((wSize,wSize), duration=drums.duration, audio=wav)
 def spaceflight(f):
@@ -30,9 +34,18 @@ def spaceflight(f):
 
     global starCount
     global starSize
+    global starPoints
+    global starPointsInitial
+    global cumulativeAmp
+    print(cumulativeAmp)
+
 
     # todo: interpolate/smooth
     amp = audio.amp(f.i)
+    cumulativeAmp = 0
+    for i in range(f.i):
+        cumulativeAmp += audio.amp(i)
+
     starWarpSpeedSize = amp*200
     center = (f.a.r.mxx/2,f.a.r.mxy/2)
     focalPoint = (center[0]+0, center[1]+0)
@@ -41,12 +54,17 @@ def spaceflight(f):
     deadSpotRady = 00
     stars = DATPens()
 
-    moveSpeed = amp*40     # later, implement some function of midi or amp. for now, 1
+    moveSpeed = cumulativeAmp * 40     # later, implement some function of midi or amp. for now, 1
     starPointsCopy = []
 
     for i in range(starCount):
         starPointx = starPoints[i][0]
         starPointy = starPoints[i][1]
+
+        # todo: replace box w circle
+        # divide by 0 safety and deadspot logic
+        if (starPointx-focalPoint[0]) == 0: # or (-deadSpotRadx < (starPointx-focalPoint[0]) < deadSpotRadx and -deadSpotRady < (starPointy-focalPoint[1]) < deadSpotRady):
+            starPointx += 1
 
         relativePos = [(starPointx-focalPoint[0]), (starPointy-focalPoint[1])]
         starDistance = math.hypot(relativePos[0], relativePos[1])
@@ -57,11 +75,6 @@ def spaceflight(f):
             starDistDistort = starSize
 
         starRect = Rect([starPointx, starPointy, starSize, starDistDistort])
-
-        # todo: replace box w circle
-        # divide by 0 safety and deadspot logic
-        if (starPointx-focalPoint[0]) == 0 or (-deadSpotRadx < (starPointx-focalPoint[0]) < deadSpotRadx and -deadSpotRady < (starPointy-focalPoint[1]) < deadSpotRady):
-            continue
 
 
         # todo: better math with tan to get accurate sign?
@@ -79,13 +92,14 @@ def spaceflight(f):
 
         # forward motion
         # todo: more efficient/clean? 
-        if len(starPointsCopy) == starCount:
-            starPointsCopy.pop(i)
-        starPointsCopy.insert(i, starPoints[i])
-        starPoints.pop(i)
-        starPoints.insert(i, ((starPointsCopy[i][0] + moveSpeed * starDistance/200 * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsCopy[i][1] + moveSpeed * starDistance/200 * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
+        # if len(starPointsCopy) == starCount:
+        #     starPointsCopy.pop(i)
+        # starPointsCopy.insert(i, starPoints[i])
+        # starPoints.pop(i)
+        # starPoints.insert(i, ((starPointsCopy[i][0] + moveSpeed * starDistance/200 * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsCopy[i][1] + moveSpeed * starDistance/200 * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
 
-  
+        starPoints[i] = (((starPointsInitial[i][0] + moveSpeed * starDistance/200 * cumulativeAmp * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsInitial[i][1] + moveSpeed * starDistance/200 * cumulativeAmp * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
+
     ################
     # text
     ################
