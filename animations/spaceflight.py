@@ -19,14 +19,15 @@ starPoints = []
 starSize = 5
 for i in range(starCount):
     starPoints.append((pyRandom.randint(0,wSize-starSize),(pyRandom.randint(0,wSize-starSize))))
-    
+
 @animation((wSize,wSize), duration=drums.duration, audio=wav)
 def spaceflight(f):
     # kick = drums.fv(f.i, [36], [5, 50])
-    
+
     ################
     # stars
     ################
+
     global starCount
     global starSize
 
@@ -40,6 +41,8 @@ def spaceflight(f):
     deadSpotRady = 00
     stars = DATPens()
 
+    moveSpeed = amp*40     # later, implement some function of midi or amp. for now, 1
+    starPointsCopy = []
 
     for i in range(starCount):
         starPointx = starPoints[i][0]
@@ -74,6 +77,15 @@ def spaceflight(f):
             .rotate(starOrient, point = Point(starPointx, starPointy))      # makes it grow only outward 
         )
 
+        # forward motion
+        # todo: more efficient/clean? 
+        if len(starPointsCopy) == starCount:
+            starPointsCopy.pop(i)
+        starPointsCopy.insert(i, starPoints[i])
+        starPoints.pop(i)
+        starPoints.insert(i, ((starPointsCopy[i][0] + moveSpeed * starDistance/200 * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsCopy[i][1] + moveSpeed * starDistance/200 * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
+
+  
     ################
     # text
     ################
