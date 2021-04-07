@@ -8,7 +8,7 @@ import math
 
 # todo: change font
 myFont = Font("assets/Secuela-Italic-v_1_787-TTF-VF.ttf")
-drums = MidiReader("demos/pz2/pz2_MIDI_new.mid", duration=100, bpm=82, fps=30)[0]
+drums = MidiReader("demos/pz2/pz2_MIDI_new.mid", duration=300, bpm=82, fps=30)[0]
 # wav playing still doesn't work yet
 wav = __sibling__("../demos/pz2/pz2_amp.wav")
 audio = Wavfile("demos/pz2/pz2_amp.wav")
@@ -56,8 +56,8 @@ def spaceflight(f):
     deadSpotRady = 00
     stars = DATPens()
 
-    moveSpeed = cumulativeAmp * 2    # later, implement some function of midi or amp. for now, 1
-
+    moveSpeed = amp * 20  + 20
+ 
     for i in range(starCount):
         starPointx = starPoints[i][0]
         starPointy = starPoints[i][1]
@@ -92,13 +92,14 @@ def spaceflight(f):
         )
 
         # forward motion
-        starPoints[i] = (((starPointsInitial[i][0] + moveSpeed * starDistance/200 * cumulativeAmp * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsInitial[i][1] + moveSpeed * starDistance/200 * cumulativeAmp * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
+        starPoints[i] = (((starPointsInitial[i][0] + (starDistance/80 + moveSpeed) * (f.i - framesSinceLastGen[i])/5 * relativePos[0]/math.hypot(relativePos[0], relativePos[1])), (starPointsInitial[i][1] + (starDistance/80 + moveSpeed) * (f.i - framesSinceLastGen[i])/5 * relativePos[1]/math.hypot(relativePos[0], relativePos[1]))))
 
         # out of bounds regen
-        if starPointx < -100 or starPointx > wSize + 100 or starPointy < -100 or starPointy > wSize + 100:
+        if starPointx < 0 or starPointx > wSize + 0 or starPointy < 0 or starPointy > wSize + 0:
             starPoints[i] = (pyRandom.randint(wSize/2 - 100,wSize/2+100),pyRandom.randint(wSize/2 - 100,wSize/2+100))
             starPointsInitial[i] = starPoints[i]
-            framesSinceLastGen = f.i
+            framesSinceLastGen[i] = f.i
+
     ################
     # text
     ################
