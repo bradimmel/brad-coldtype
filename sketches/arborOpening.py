@@ -19,9 +19,20 @@ def arborOpening(f):
         r=1,
         wdth=10,
         wght=400,
-        tu = -10
+        tu = -25
         )
 
+    slowPoints = [150,250]
+    fastCloudSpeed = 3
+    slowCloudSpeed = .8
+
+    if f.i  < slowPoints[0]/fastCloudSpeed:     # in
+        cloudProgress = fastCloudSpeed * f.i
+    elif f.i > slowPoints[1]/fastCloudSpeed:    # out
+        cloudProgress = slowPoints[0] + ((slowPoints[1] - slowPoints[0]) / fastCloudSpeed) * slowCloudSpeed + (f.i-slowPoints[1]/fastCloudSpeed) * fastCloudSpeed
+    else:                                       # middle
+        #cloudProgress = (fastCloudSpeed-1)*slowPoints[0]/fastCloudSpeed+f.i
+        cloudProgress =  slowPoints[0] + (f.i - slowPoints[0] / fastCloudSpeed) * slowCloudSpeed
     eisenach = ((Composer(f.a.r,
         "EISENACH",
         style,
@@ -32,7 +43,7 @@ def arborOpening(f):
         .understroke(s=hsl(1, 1, 1), sw=10)
         .skew(-.2)
         .rotate(5)
-        .translate(-1000+f.i*6,500+f.i/2)
+        .translate(-1000+cloudProgress*6,500+f.i/2)
         # .pmap(lambda i, p:
         #     p.attr(skp = dict(
         #         PathEffect=skia.DiscretePathEffect.Make(20, l.e*10+2, random.randint(0,100))
@@ -56,7 +67,7 @@ def arborOpening(f):
         .understroke(s=hsl(1, 1, 1), sw=10)
         .skew(-.2)
         .rotate(5)
-        .translate(1200-f.i*6,100-f.i/2)
+        .translate(1300-f.i*6,100-f.i/2)
         # .pmap(lambda i, p:
         #     p.attr(skp = dict(
         #         PathEffect=skia.DiscretePathEffect.Make(20, l.e*10+2, random.randint(0,100))
@@ -67,14 +78,25 @@ def arborOpening(f):
                   ))
         )
     )
-    
-    theArborShadow = theArbor.copy().translate(-8,-5).f(hsl(0.58, 1, .95))
-    return (
-        (DATPen()
+
+    sunRad  =  200
+    sun = (DATPen()
+        .oval(f.a.r.inset(f.a.r.mxx/2-sunRad,f.a.r.mxy/2-sunRad))
+        .f(hsl(0.17 -f.i/7000,1,.85))
+        .translate(300,500)
+    )
+
+    sky = (DATPen()
         .rect(f.a.r)
         .f(hsl(0.17,1,.78))
         .f(bgColor)
-        ),
+    )
+
+    theArborShadow = theArbor.copy().translate(-8,-5).f(hsl(0.58, 1, .95))
+    return (
+        (sky),
+
+        (sun),
 
         (eisenachShadow
         .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
@@ -93,6 +115,8 @@ def arborOpening(f):
         
         .phototype(f.a.r, cut=150, cutw=8, fill=(eisenachColor))
         )
+
+        
 
         
 
