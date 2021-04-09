@@ -1,9 +1,9 @@
 from coldtype import *
 from coldtype.warping import warp_fn
 
-myFont = Font("../assets/VulfMonoDemo-Light.otf")
+myFont = Font("../assets/VulfMonoDemo-Italic.otf")
 duration = 450
-@animation((2600,800), timeline=Timeline(duration))
+@animation((2000,300), timeline=Timeline(duration))
 def bradleyimmel(f):
     loopNum = 18
     l = f.a.progress(f.i, loops=loopNum, easefn="eeio")
@@ -37,11 +37,11 @@ def bradleyimmel(f):
 
         if pen.glyphName == "B":
             return (pen
-                .mod_contour(0, lambda p: p.skew(l.e/-5) if l.loop in [0, 1] else p.noop())
+                .mod_contour(2, lambda p: p.skew(l.e/-5) if l.loop in [0, 1] else p.noop())
                 .mod_contour(1, lambda p: p.scale(1-l.e/3) if l.loop in [0, 1] else p.noop())
                 .mod_contour(1, lambda p: p.rotate(l.e*-10) if l.loop in [0, 1] else p.noop())
-                .mod_contour(2, lambda p: p.scale(1-l.e/3) if l.loop in [0, 1] else p.noop())
-                .mod_contour(2, lambda p: p.rotate(l.e*-10) if l.loop in [0, 1] else p.noop())
+                .mod_contour(0, lambda p: p.scale(1-l.e/3) if l.loop in [0, 1] else p.noop())
+                .mod_contour(0, lambda p: p.rotate(l.e*-10) if l.loop in [0, 1] else p.noop())
             )
             
         if pen.glyphName == "r":
@@ -58,9 +58,9 @@ def bradleyimmel(f):
 
         if pen.glyphName == "d":
             return (pen
-                .mod_contour(1, lambda p: p.skew(l.e/-5) if l.loop in [0, 1] else p.noop())
-                .mod_contour(0, lambda p: p.scale(1-l.e/3) if l.loop in [0, 1] else p.noop())
-                .mod_contour(0, lambda p: p.rotate(l.e*-10) if l.loop in [0, 1] else p.noop())
+                .mod_contour(0, lambda p: p.skew(l.e/-5) if l.loop in [0, 1] else p.noop())
+                .mod_contour(1, lambda p: p.scale(1-l.e/3) if l.loop in [0, 1] else p.noop())
+                .mod_contour(1, lambda p: p.rotate(l.e*-10) if l.loop in [0, 1] else p.noop())
             )
 
         if pen.glyphName == "l":
@@ -102,14 +102,14 @@ def bradleyimmel(f):
 
 
     def move_r_top( idx,x, y):
-        if 33 <= idx <= 48 and l.loop in [14]:
-            return x, y + l_speedy.e*8
+        if 36 <= idx <= 52 and l.loop in [14]:
+            return x, y + l_speedy.e*12
         else:
             return x, y
 
     def move_d_top( idx,x, y):
-        if 25 <= idx <= 38 and l.loop in [15]:
-            return x, y + l_speedy.e*8
+        if (36 <= idx <= 52 or 0 <= idx <= 2) and l.loop in [15]:
+            return x, y + l_speedy.e*12
         else:
             return x, y
 
@@ -117,9 +117,9 @@ def bradleyimmel(f):
 
     bimmel[0][3].map_points(move_d_top)
     def move_y_top( idx,x, y):
-        if 30 <= idx <= 52 and l.loop in [16]:
+        if 50 <= idx <= 66 and l.loop in [16]:
             return x, y + l_speedy.e*8
-        elif 5 <= idx <= 27 and l.loop in [17]:
+        elif 35 <= idx <= 41 and l.loop in [17]:
             return x, y + l_speedy.e*8
         else:
             return x, y
@@ -131,7 +131,10 @@ def bradleyimmel(f):
     return (
         (bimmel
         .pmap(shift_counters)
-        .f(1)
-        .phototype(f.a.r, cut=100, cutw=8, fill=(hsl(0.16, 1, 0)))
+        .f(0)
+        #.phototype(f.a.r, cut=150, cutw=40, fill=(hsl(0.16, 1, 0)))
         )
     )
+
+def release(passes):
+    FFMPEGExport(bradleyimmel, passes).gif().write()
