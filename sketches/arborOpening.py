@@ -22,6 +22,7 @@ def arborOpening(f):
         tu = -25
         )
 
+    # define different sections/speeds
     slowPoints = [150,250]
     fastCloudSpeed = 3
     slowCloudSpeed = .8
@@ -33,9 +34,12 @@ def arborOpening(f):
     else:                                       # middle
         #cloudProgress = (fastCloudSpeed-1)*slowPoints[0]/fastCloudSpeed+f.i
         cloudProgress =  slowPoints[0] + (f.i - slowPoints[0] / fastCloudSpeed) * slowCloudSpeed
+    
+
+
     eisenach = ((Composer(f.a.r,
         "EISENACH",
-        style,
+        style
         )
         .pens()
         .align(f.a.r)
@@ -59,15 +63,16 @@ def arborOpening(f):
 
     theArbor = ((Composer(f.a.r,
         "AT\n     THE ARBOR",
-        style,
+        style
         )
         .pens()
         .align(f.a.r)
         .f(eisenachColor)
         .understroke(s=hsl(1, 1, 1), sw=10)
+        .scale(.8)
         .skew(-.2)
         .rotate(5)
-        .translate(1300-f.i*6,100-f.i/2)
+        .translate(1100-cloudProgress*6,100-f.i/2)
         # .pmap(lambda i, p:
         #     p.attr(skp = dict(
         #         PathEffect=skia.DiscretePathEffect.Make(20, l.e*10+2, random.randint(0,100))
@@ -80,10 +85,14 @@ def arborOpening(f):
     )
 
     sunRad  =  200
+    sunColor = hsl(0.17 -f.i/7000,1,.85)
     sun = (DATPen()
         .oval(f.a.r.inset(f.a.r.mxx/2-sunRad,f.a.r.mxy/2-sunRad))
-        .f(hsl(0.17 -f.i/7000,1,.85))
+        .f(sunColor)
         .translate(300,500)
+        .flatten(30)
+        .roughen(5)
+        
     )
 
     sky = (DATPen()
@@ -93,10 +102,18 @@ def arborOpening(f):
     )
 
     theArborShadow = theArbor.copy().translate(-8,-5).f(hsl(0.58, 1, .95))
+    
+
+
+
+
+
     return (
         (sky),
 
-        (sun),
+        (sun
+        .phototype(f.a.r, cut=150, cutw=8, fill=(sunColor))
+        ),
 
         (eisenachShadow
         .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
