@@ -1,29 +1,31 @@
 from coldtype import *
 import random
+from coldtype.warping import warp_fn
 
-myFont = Font("../assets/MutatorSans.ttf")
+mutator = Font("../assets/MutatorSans.ttf")
+vulf =  Font("../assets/VulfMonoDemo-Italic.otf")
 duration = 400
 
 
 @animation((1080,1920), timeline=Timeline(duration))
 def arborOpening(f):
-    loopNum = 4
-    l = f.a.progress(f.i, loops=loopNum, easefn="seio")
-    
+    loopNum = 16
+    l = f.a.progress(f.i, loops=loopNum, easefn="ceio")
+    #loopLength = duration/(2*loopNum)
 
     eisenachColor = hsl(0.1, 1, 1)
     bgColor = hsl(0.58, 1, .9)
-    style = Style(myFont,
+    style = Style(mutator,
         200,
-        ro=1,
         r=1,
+        ro=1,
         wdth=10,
         wght=400,
         tu = -25
         )
 
     # define different sections/speeds
-    slowPoints = [150,250]
+    slowPoints = [150,280]
     fastCloudSpeed = 3
     slowCloudSpeed = .8
 
@@ -73,10 +75,6 @@ def arborOpening(f):
         .skew(-.2)
         .rotate(5)
         .translate(1100-cloudProgress*6,100-f.i/2)
-        # .pmap(lambda i, p:
-        #     p.attr(skp = dict(
-        #         PathEffect=skia.DiscretePathEffect.Make(20, l.e*10+2, random.randint(0,100))
-        #     )))
         .pmap(lambda i, p: 
               (p.flatten(10)
                 .roughen(amplitude = int(3))
@@ -105,6 +103,54 @@ def arborOpening(f):
     
 
 
+    # looping text
+    loopStart = 4
+    midSpace = 0
+    if  l.loop in [loopStart, loopStart+1, loopStart+2, loopStart+3]:
+        infoTracking = -60+l.e*100
+        infoSize = .8
+        midSpace = l.e*500
+    else:
+        infoTracking = -60
+        midSpace = 0
+
+    infoStyle = Style(mutator,
+        200,
+        r=1,
+        ro=1,
+        wdth=400,  
+        wght=900,
+        tu = infoTracking,
+        kp={"Y/F":1000-midSpace}
+    )
+
+    dateAndTime = (StyledString(
+    "THURSDAYFIVE PM",  
+    infoStyle)
+    .pens()
+    .align(f.a.r)
+    .scale(.5)
+    .translate(0, -800)
+    #.pmap(shift_counters)
+    .scale(.8,1)
+    .f(hsl(.9,1,1))
+    #.s(1).sw(7).f(None)
+    .skew(.1)
+    .pmap(lambda i, p: 
+            (p.flatten(3)
+                .nlt(warp_fn(f.i*5, f.i*5, mult=20))))
+    )
+
+    
+
+
+    
+    for i in range(len(dateAndTime)):
+        if l.loop in [loopStart,loopStart+2]:
+            dateAndTime[i].rotate((l.e+l.loop)*90).scale((-l.e+2)/2)
+        elif l.loop in [loopStart+1,loopStart+3]:
+            dateAndTime[i].rotate((1-l.e+l.loop)*90).scale((-l.e+2)/2)
+
 
 
 
@@ -131,6 +177,12 @@ def arborOpening(f):
         (theArbor
         
         .phototype(f.a.r, cut=150, cutw=8, fill=(eisenachColor))
+        ),
+
+        (dateAndTime
+        
+        .phototype(f.a.r, cut=180, cutw=8, fill=(hsl(.7,1,1)))
+        
         )
 
         
