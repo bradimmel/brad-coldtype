@@ -11,6 +11,7 @@ duration = 400
 def arborOpening(f):
     loopNum = 16
     l = f.a.progress(f.i, loops=loopNum, easefn="ceio")
+    l2 = f.a.progress(f.i, loops = loopNum, easefn="seio")
     #loopLength = duration/(2*loopNum)
 
     eisenachColor = hsl(0.1, 1, 1)
@@ -49,17 +50,26 @@ def arborOpening(f):
         .understroke(s=hsl(1, 1, 1), sw=10)
         .skew(-.2)
         .rotate(5)
-        .translate(-1000+cloudProgress*6,500+f.i/2)
+        .translate(-100)#+cloudProgress*6,500+f.i/2)
         # .pmap(lambda i, p:
         #     p.attr(skp = dict(
         #         PathEffect=skia.DiscretePathEffect.Make(20, l.e*10+2, random.randint(0,100))
         #     )))
-        .pmap(lambda i, p: 
-              (p.flatten(10)
-                .roughen(amplitude = int(3))
-                  ))
+        
+        # .pmap(lambda i, p: 
+        #       (p.flatten(10)
+        #         .roughen(amplitude = int(3))
+        #           ))
         )
         )
+
+    # a = eisenach.pmap(lambda i, p: 
+    #         (p.flatten(10)
+    #         .roughen(10, seed=1)
+    #         ))
+
+    a = eisenach.pen().flatten(10).roughen(20, seed=random.randint(0,10))
+    b = eisenach.pen().flatten(10).roughen(20, seed=random.randint(0,10))
 
     eisenachShadow = eisenach.copy().translate(-8,-5).f(hsl(0.58, 1, .95))
 
@@ -88,10 +98,13 @@ def arborOpening(f):
         .oval(f.a.r.inset(f.a.r.mxx/2-sunRad,f.a.r.mxy/2-sunRad))
         .f(sunColor)
         .translate(300,500)
-        .flatten(30)
-        .roughen(5)
+        #.flatten(30)
+        #.roughen(5)
         
     )
+
+    sunA = sun.copy().flatten(30).roughen(20, seed=1)
+    sunB = sun.copy().flatten(30).roughen(20, seed=10)
 
     sky = (DATPen()
         .rect(f.a.r)
@@ -157,22 +170,37 @@ def arborOpening(f):
     return (
         (sky),
 
-        (sun
-        .phototype(f.a.r, cut=150, cutw=8, fill=(sunColor))
+        # (sun
+        # .phototype(f.a.r, cut=150, cutw=8, fill=(sunColor))
+        # ),
+
+        # new sun
+        (DP
+        
+        #.phototype(f.a.r, cut=150, cutw=8, fill=(eisenachColor))
+        .Interpolate([sunA, sunB], l2.e)
+            .f(1)
+            .smooth()
+            .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=sunColor)
         ),
 
-        (eisenachShadow
-        .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
-        ),
+        # (eisenachShadow
+        # .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
+        # ),
 
         (theArborShadow
         .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
         ),
 
-        (eisenach
-        
-        .phototype(f.a.r, cut=150, cutw=8, fill=(eisenachColor))
+        # new eisenach
+            
+        (DP
+        .Interpolate([a, b], l2.e)
+            .f(1)
+            #.smooth()
+            .phototype(f.a.r, blur=5, cut=100, cutw=20)
         ),
+        
 
         (theArbor
         
