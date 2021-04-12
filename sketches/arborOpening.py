@@ -6,6 +6,7 @@ mutator = Font("../assets/MutatorSans.ttf")
 vulf =  Font("../assets/VulfMonoDemo-Italic.otf")
 duration = 400
 
+rs1 = random_series(0, 1000)
 
 @animation((1080,1920), timeline=Timeline(duration))
 def arborOpening(f):
@@ -68,8 +69,8 @@ def arborOpening(f):
     #         .roughen(10, seed=1)
     #         ))
 
-    a = eisenach.pen().flatten(10).roughen(20, seed=random.randint(0,10))
-    b = eisenach.pen().flatten(10).roughen(20, seed=random.randint(0,10))
+    a = eisenach.copy().pen().flatten(10).roughen(20, seed=rs1[l.loop])
+    b = eisenach.copy().pen().flatten(10).roughen(20, seed=rs1[l.loop+1])
 
     eisenachShadow = eisenach.copy().translate(-8,-5).f(hsl(0.58, 1, .95))
 
@@ -192,8 +193,8 @@ def arborOpening(f):
         .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
         ),
 
+
         # new eisenach
-            
         (DP
         .Interpolate([a, b], l2.e)
             .f(1)
