@@ -4,7 +4,7 @@ from coldtype.warping import warp_fn
 
 mutator = Font("../assets/MutatorSans.ttf")
 vulf =  Font("../assets/VulfMonoDemo-Italic.otf")
-duration = 400
+duration = 450
 
 rs1 = random_series(0, 1000)
 
@@ -12,7 +12,7 @@ rs1 = random_series(0, 1000)
 def arborOpening(f):
     loopNum = 16
     l = f.a.progress(f.i, loops=loopNum, easefn="ceio")
-    l2 = f.a.progress(f.i, loops = loopNum, easefn="seio")
+    l2 = f.a.progress(f.i/4, loops = loopNum, easefn="seio")
     #loopLength = duration/(2*loopNum)
 
     eisenachColor = hsl(0.1, 1, 1)
@@ -27,9 +27,9 @@ def arborOpening(f):
         )
 
     # define different sections/speeds
-    slowPoints = [150,280]
-    fastCloudSpeed = 3
-    slowCloudSpeed = .8
+    slowPoints = [150,200]
+    fastCloudSpeed = .8
+    slowCloudSpeed = .4
 
     if f.i  < slowPoints[0]/fastCloudSpeed:     # in
         cloudProgress = fastCloudSpeed * f.i
@@ -51,26 +51,24 @@ def arborOpening(f):
         .understroke(s=hsl(1, 1, 1), sw=10)
         .skew(-.2)
         .rotate(5)
-        .translate(-100)#+cloudProgress*6,500+f.i/2)
-        # .pmap(lambda i, p:
-        #     p.attr(skp = dict(
-        #         PathEffect=skia.DiscretePathEffect.Make(20, l.e*10+2, random.randint(0,100))
-        #     )))
-        
-        # .pmap(lambda i, p: 
-        #       (p.flatten(10)
-        #         .roughen(amplitude = int(3))
-        #           ))
+        .translate(-1000+cloudProgress*6,500+cloudProgress/2)
         )
         )
 
-    # a = eisenach.pmap(lambda i, p: 
-    #         (p.flatten(10)
-    #         .roughen(10, seed=1)
-    #         ))
 
-    a = eisenach.copy().pen().flatten(10).roughen(20, seed=rs1[l.loop])
-    b = eisenach.copy().pen().flatten(10).roughen(20, seed=rs1[l.loop+1])
+    #eisenachB = eisenach.copy().pen().flatten(10).roughen(20, seed=rs1[math.floor((l.loop+1)/2)])   # returns 0 if in [0,1], 1 if in [2,3], etc.
+    
+    eisenachA = eisenach.copy().pen().flatten(10).roughen(15, seed=0)
+    eisenachB = eisenach.copy().pen().flatten(10).roughen(15, seed=1)
+    eisenachC = eisenach.copy().pen().flatten(10).roughen(15, seed=2)
+    eisenachD = eisenach.copy().pen().flatten(10).roughen(15, seed=3)
+ 
+    eisenachCloud  = (DP
+        .Interpolate([eisenachA, eisenachB, eisenachC, eisenachD], l2.e)
+            .f(1)
+            .smooth()
+            .phototype(f.a.r, blur=5, cut=100, cutw=20)
+        )
 
     eisenachShadow = eisenach.copy().translate(-8,-5).f(hsl(0.58, 1, .95))
 
@@ -85,13 +83,21 @@ def arborOpening(f):
         .scale(.8)
         .skew(-.2)
         .rotate(5)
-        .translate(1100-cloudProgress*6,100-f.i/2)
-        .pmap(lambda i, p: 
-              (p.flatten(10)
-                .roughen(amplitude = int(3))
-                  ))
+        .translate(1100-cloudProgress*6,100-cloudProgress/2)
         )
     )
+
+    theArborA = theArbor.copy().pen().flatten(10).roughen(15, seed=0)
+    theArborB = theArbor.copy().pen().flatten(10).roughen(15, seed=1)
+    theArborC = theArbor.copy().pen().flatten(10).roughen(15, seed=2)
+    theArborD = theArbor.copy().pen().flatten(10).roughen(15, seed=3)
+
+    theArborCloud  = (DP
+        .Interpolate([theArborA, theArborB, theArborC, theArborD], l2.e)
+            .f(1)
+            .smooth()
+            .phototype(f.a.r, blur=5, cut=100, cutw=20)
+        )
 
     sunRad  =  200
     sunColor = hsl(0.17 -f.i/7000,1,.85)
@@ -118,8 +124,7 @@ def arborOpening(f):
 
 
     # looping text
-    loopStart = 4
-    midSpace = 0
+    loopStart = 14
     if  l.loop in [loopStart, loopStart+1, loopStart+2, loopStart+3]:
         infoTracking = -60+l.e*100
         infoSize = .8
@@ -161,9 +166,9 @@ def arborOpening(f):
     
     for i in range(len(dateAndTime)):
         if l.loop in [loopStart,loopStart+2]:
-            dateAndTime[i].rotate((l.e+l.loop)*90).scale((-l.e+2)/2)
+            dateAndTime[i].rotate((l.e+l.loop-loopStart)*90).scale((-l.e+2)/2)
         elif l.loop in [loopStart+1,loopStart+3]:
-            dateAndTime[i].rotate((1-l.e+l.loop)*90).scale((-l.e+2)/2)
+            dateAndTime[i].rotate((1-l.e+l.loop-loopStart)*90).scale((-l.e+2)/2)
 
 
 
@@ -171,42 +176,27 @@ def arborOpening(f):
     return (
         (sky),
 
-        # (sun
-        # .phototype(f.a.r, cut=150, cutw=8, fill=(sunColor))
-        # ),
-
         # new sun
         (DP
-        
-        #.phototype(f.a.r, cut=150, cutw=8, fill=(eisenachColor))
-        .Interpolate([sunA, sunB], l2.e)
+            .Interpolate([sunA, sunB], l2.e)
             .f(1)
             .smooth()
             .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=sunColor)
         ),
 
-        # (eisenachShadow
-        # .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
-        # ),
+        (eisenachShadow
+            .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
+        ),
 
         (theArborShadow
-        .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
+            .phototype(f.a.r, cut=150, cutw=8, fill=(hsl(0.58, 1, .95)))
         ),
 
 
         # new eisenach
-        (DP
-        .Interpolate([a, b], l2.e)
-            .f(1)
-            #.smooth()
-            .phototype(f.a.r, blur=5, cut=100, cutw=20)
-        ),
-        
+        (eisenachCloud),
 
-        (theArbor
-        
-        .phototype(f.a.r, cut=150, cutw=8, fill=(eisenachColor))
-        ),
+        (theArborCloud),
 
         (dateAndTime
         
@@ -219,3 +209,6 @@ def arborOpening(f):
         
 
     )
+
+def release(passes):
+    FFMPEGExport(arborOpening, passes).gif().write()
