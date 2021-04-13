@@ -8,7 +8,7 @@ duration = 450
 
 rs1 = random_series(0, 1000)
 
-@animation((1080,1920), timeline=Timeline(duration))
+@animation((1080,1080), timeline=Timeline(duration))
 def arborOpening(f):
     loopNum = 16
     l = f.a.progress(f.i, loops=loopNum, easefn="ceio")
@@ -51,7 +51,8 @@ def arborOpening(f):
         .understroke(s=hsl(1, 1, 1), sw=10)
         .skew(-.2)
         .rotate(5)
-        .translate(-1000+cloudProgress*6,500+cloudProgress/2)
+        #.translate(-1000+cloudProgress*6,500+cloudProgress/2)
+        .translate(-1000+cloudProgress*6,250+cloudProgress/2)
         )
         )
 
@@ -83,7 +84,8 @@ def arborOpening(f):
         .scale(.8)
         .skew(-.2)
         .rotate(5)
-        .translate(1100-cloudProgress*6,100-cloudProgress/2)
+        #.translate(1100-cloudProgress*6,100-cloudProgress/2)
+        .translate(1100-cloudProgress*6,0-cloudProgress/2)
         )
     )
 
@@ -104,9 +106,8 @@ def arborOpening(f):
     sun = (DATPen()
         .oval(f.a.r.inset(f.a.r.mxx/2-sunRad,f.a.r.mxy/2-sunRad))
         .f(sunColor)
-        .translate(300,500)
-        #.flatten(30)
-        #.roughen(5)
+        #.translate(300,500)
+        .translate(300,300)
         
     )
 
@@ -149,7 +150,8 @@ def arborOpening(f):
     .pens()
     .align(f.a.r)
     .scale(.5)
-    .translate(0, -800)
+    #.translate(0, -800)
+    .translate(0,-480)
     #.pmap(shift_counters)
     .scale(.8,1)
     .f(hsl(.9,1,1))
