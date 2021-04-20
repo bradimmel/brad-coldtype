@@ -23,31 +23,29 @@ def arbor01(f):
 
     LatA = (StyledString("LIVE AT THE ARBOR",
         Style(mutator, 80, wght=800, wdth=200, tu=0, space=800))
-        #.fit(squiggle.length())
         .pens()
-        #.pmap(lambda i, p: p.f(hsl(1,1,1)))
         .distribute_on_path(squiggle2, offset=-3*f.i+1300)
         )
 
-    sky = DATPens().rect(Rect(1080,1920)).f(hsl(.9,1,.85))
+    sky = DATPens().rect(Rect(1080,1920)).f(hsl(.9,1,.88))
     ocean = DATPens().rect(Rect(1080,600)).f(hsl(.6,1,.7)).scale(1.1,1).offset_y(400)
 
     sun = (DATPens()
         .oval(f.a.r.inset(f.a.r.mxx/2-200,f.a.r.mxy/2-200))
-        .f(hsl(.13,1,.8))
+        .f(hsl(1,1,1))
         #.translate(300,500)
         .translate(300,80) 
         .pmap(lambda i, p: 
         (p.flatten(2)
             .nlt(warp_fn(f.i*10, f.i*10, mult=2))))
-
+        .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.1,1,.7)))
     )
 
     sand = DATPens().rect(Rect(1080,500)).f(hsl(.18,1,.85))
     
     ocean.pmap(lambda i, p: 
-        (p.flatten(3)
-            .nlt(warp_fn(f.i*10, f.i*10, mult=30))))
+        (p.flatten(1)
+            .nlt(warp_fn(f.i*10, f.i*10, mult=15))))
 
 
     # beach[1].f(hsl(.9,1,.85))
