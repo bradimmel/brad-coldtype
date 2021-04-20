@@ -2,7 +2,8 @@ from coldtype import *
 from coldtype.warping import warp_fn
 
 mutator = Font("../assets/MutatorSans.ttf")
-vulf = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
+vulfBlack = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
+vulfBold = Font("../assets/VulfMono/VulfMonoDemo-BoldItalic.otf")
 tl = Timeline(900)
 
 rs1 = random_series(0, 100)
@@ -17,19 +18,25 @@ def arbor01(f):
     #circle.rotate(-f.i*2)
     
     CB = (StyledString("Claire Brooks",
-        Style(vulf, 90, wght=800, wdth=200, tu=0, space=800))
+        Style(vulfBlack, 90, wght=800, wdth=200, tu=0, space=800))
         #.fit(squiggle.length())
         .pens()
         .f(hsl(.6,1,.9))
         #.pmap(lambda i, p: p.f(hsl(1,1,1)))
         .distribute_on_path(squiggle, offset=3*f.i-100)
         .offset(0,600)
+
+        # .pmap(lambda i, p: 
+        # (p.flatten(2)
+        #     .nlt(warp_fn(0, f.i*10, mult=10))))
         )
+
+    
 
     CBShadow = CB.copy().offset(-4,-6).f(hsl(1,1,1))
 
     # LIVE AT THE ARBOR
-    LatAStyle = Style(vulf, 80, wght=800, wdth=200, tu=400, space=800)
+    LatAStyle = Style(vulfBlack, 80, wght=800, wdth=200, tu=400, space=800)
 
     LatA = DATPens()
 
@@ -84,15 +91,13 @@ def arbor01(f):
     
     sky = DATPens().rect(Rect(1080,1920)).f(hsl(.9,1,.88))
     ocean = DATPens().rect(Rect(1080,600)).f(hsl(.6,1,.7)).scale(1.1,1).offset_y(400)
-
     sun = (DATPens()
         .oval(f.a.r.inset(f.a.r.mxx/2-200,f.a.r.mxy/2-200))
         .f(hsl(1,1,1))
-        #.translate(300,500)
         .translate(300,80) 
-        .pmap(lambda i, p: 
-        (p.flatten(2)
-            .nlt(warp_fn(f.i*10, f.i*10, mult=2))))
+        # .pmap(lambda i, p: 
+        # (p.flatten(2)
+        #     .nlt(warp_fn(f.i*10, f.i*10, mult=2))))
         .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
     )
 
@@ -103,11 +108,22 @@ def arbor01(f):
             .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
 
+    sunTextOffset = 18
+    sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextOffset,f.a.r.mxy/2-200 - sunTextOffset)).translate(300,80).reverse()
+    sunText = (StyledString("Friday 7PM "*20,
+        Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
+        .fit(sunCirc.length())
+        .pens()
+        .f(hsl(1,1,1))
+        .distribute_on_path(sunCirc, offset=3*f.i-2000)
+        )
+
 
     return (
         # beach!
         (sky),
         (sun),
+        (sunText),
         (sand),
         (ocean),
 
