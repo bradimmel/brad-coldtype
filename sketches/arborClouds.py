@@ -7,7 +7,7 @@ vulf =  Font("../assets/VulfMonoDemo-Italic.otf")
 duration = 450
 
 rs1 = random_series(0, 1000)
-
+ 
 @animation((1080,1080), timeline=Timeline(duration))
 def arborOpening(f):
     loopNum = 16
