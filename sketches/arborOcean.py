@@ -4,12 +4,12 @@ from coldtype.warping import warp_fn
 mutator = Font("../assets/MutatorSans.ttf")
 vulfBlack = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
 vulfBold = Font("../assets/VulfMono/VulfMonoDemo-BoldItalic.otf")
-tl = Timeline(900)
+tl = Timeline(450)
 
 rs1 = random_series(0, 100)
 
 @animation((1080,1920), timeline=tl)
-def arbor01(f):
+def arborOcean(f):
 
     circleRad = 350
     circle = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-circleRad))
@@ -86,7 +86,7 @@ def arbor01(f):
 
     
     
-    sky = DATPens().rect(Rect(1080,1920)).f(hsl(.9,1,.88))
+    sky = DATPens().rect(Rect(1080,1920)).f(hsl(.9,1,.88)).scale(1.1)
     ocean = DATPens().rect(Rect(1080,600)).f(hsl(.6,1,.7)).scale(1.1,1).offset_y(400)
     sun = (DATPens()
         .oval(f.a.r.inset(f.a.r.mxx/2-200,f.a.r.mxy/2-200))
@@ -113,6 +113,7 @@ def arbor01(f):
         .pens()
         .f(hsl(1,1,1))
         .distribute_on_path(sunCirc, offset=3*f.i-2000)
+        #.phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
         )
 
 
@@ -128,3 +129,7 @@ def arbor01(f):
         (CB),
         (LatA)
         )
+
+
+def release(passes):
+    FFMPEGExport(arborOcean, passes).gif().write()

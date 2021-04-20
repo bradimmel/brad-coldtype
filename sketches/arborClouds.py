@@ -9,7 +9,7 @@ duration = 450
 rs1 = random_series(0, 1000)
  
 @animation((1080,1080), timeline=Timeline(duration))
-def arborOpening(f):
+def arborClouds(f):
     loopNum = 16
     l = f.a.progress(f.i, loops=loopNum, easefn="ceio")
     l2 = f.a.progress(f.i/4, loops = loopNum, easefn="seio")
@@ -213,4 +213,4 @@ def arborOpening(f):
     )
 
 def release(passes):
-    FFMPEGExport(arborOpening, passes).gif().write()
+    FFMPEGExport(arborClouds, passes).gif().write()
