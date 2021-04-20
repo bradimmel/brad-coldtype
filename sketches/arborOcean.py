@@ -14,7 +14,7 @@ def arbor01(f):
 
     circleRad = 350
     circle = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-circleRad))
-    squiggle = (DATPen().sine(f.a.r.inset(-200,f.a.r.mxy/2-30), 4))
+    squiggle = (DATPen().sine(f.a.r.inset(-400,f.a.r.mxy/2-30), 5)).offset_x(-350)
     squiggle2 = (DATPen().sine(f.a.r.inset(-200,f.a.r.mxy/2-30), 3))
     #circle.rotate(-f.i*2)
     
@@ -24,8 +24,8 @@ def arbor01(f):
         .pens()
         .f(hsl(.6,1,.9))
         #.pmap(lambda i, p: p.f(hsl(1,1,1)))
-        .distribute_on_path(squiggle, offset=3*f.i-800)
-        .offset(-0,600)
+        .distribute_on_path(squiggle, offset=3*f.i-100)
+        .offset(0,600)
         )
 
     CBShadow = CB.copy().offset(-4,-6).f(hsl(1,1,1))
