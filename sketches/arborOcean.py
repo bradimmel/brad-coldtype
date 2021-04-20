@@ -11,7 +11,7 @@ sunProgress = 0
 
 @animation((1080,1920), timeline=tl)
 def arborOcean(f):
-    sunLoop = f.a.progress(f.i, loops=32, easefn="qeio")
+    sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
     global sunProgress
     # manual reset for render
     if f.i == 0:
@@ -27,10 +27,11 @@ def arborOcean(f):
         .f(hsl(.6,1,.9))
         .distribute_on_path(squiggle, offset=3*f.i-100)
         .offset(0,600)
-
+        
         .pmap(lambda i, p: 
         (p.flatten(2)
             .nlt(warp_fn(0, f.i*10, mult=10))))
+        
         )
 
     
@@ -39,6 +40,7 @@ def arborOcean(f):
 
     # LIVE AT THE ARBOR
     LatAStyle = Style(vulfBlack, 80, wght=800, wdth=200, tu=400, space=800)
+    LatAColor = hsl(.08,1,.75)
 
     LatA = DATPens()
 
@@ -47,6 +49,7 @@ def arborOcean(f):
     .align(f.a.r)
     .offset(-350,-660)
     .rotate(10)
+    .f(LatAColor)
     )
 
     LatA += (Composer(f.a.r, "AT", LatAStyle)
@@ -54,6 +57,7 @@ def arborOcean(f):
     .align(f.a.r)
     .offset(100,-660)
     .rotate(-2)
+    .f(LatAColor)
     )
 
     LatA += (Composer(f.a.r, "THE", LatAStyle)
@@ -61,6 +65,7 @@ def arborOcean(f):
     .align(f.a.r)
     .offset(-140,-830)
     .rotate(1)
+    .f(LatAColor)
     )
 
     LatA += (Composer(f.a.r, "ARBOR", LatAStyle)
@@ -68,6 +73,7 @@ def arborOcean(f):
     .align(f.a.r)
     .offset(280,-850)
     .rotate(6)
+    .f(LatAColor)
     )
 
 
@@ -112,16 +118,15 @@ def arborOcean(f):
 
     sunTextRadOffset = 18
     sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,80).reverse()
-    sunProgress += sunLoop.e
+    sunProgress += sunLoop.e 
 
-    #sunProgress = sunLoop
     sunText = (StyledString("Friday 7PM "*20,
         Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
         .fit(sunCirc.length())
         .pens()
         .f(hsl(1,1,1))
-        .distribute_on_path(sunCirc, offset=sunProgress * 10)    #3*f.i-2000)
-        #.phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
+        .distribute_on_path(sunCirc, offset= -1000 + sunProgress * 2)
+        .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
         )
 
 
