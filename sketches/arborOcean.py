@@ -4,13 +4,18 @@ from coldtype.warping import warp_fn
 mutator = Font("../assets/MutatorSans.ttf")
 vulfBlack = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
 vulfBold = Font("../assets/VulfMono/VulfMonoDemo-BoldItalic.otf")
-tl = Timeline(450)
+tl = Timeline(800)
 
 rs1 = random_series(0, 100)
+sunProgress = 0
 
 @animation((1080,1920), timeline=tl)
 def arborOcean(f):
-
+    sunLoop = f.a.progress(f.i, loops=32, easefn="qeio")
+    global sunProgress
+    # manual reset for render
+    if f.i == 0:
+        sunProgress = 0
     circleRad = 350
     circle = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-circleRad))
     squiggle = (DATPen().sine(f.a.r.inset(-400,f.a.r.mxy/2-30), 5)).offset_x(-350)
@@ -105,14 +110,17 @@ def arborOcean(f):
             .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
 
-    sunTextOffset = 18
-    sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextOffset,f.a.r.mxy/2-200 - sunTextOffset)).translate(300,80).reverse()
+    sunTextRadOffset = 18
+    sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,80).reverse()
+    sunProgress += sunLoop.e
+
+    #sunProgress = sunLoop
     sunText = (StyledString("Friday 7PM "*20,
         Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
         .fit(sunCirc.length())
         .pens()
         .f(hsl(1,1,1))
-        .distribute_on_path(sunCirc, offset=3*f.i-2000)
+        .distribute_on_path(sunCirc, offset=sunProgress * 10)    #3*f.i-2000)
         #.phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
         )
 
