@@ -7,8 +7,8 @@ from coldtype.time.audio import Wavfile
 myFont = Font("assets/Secuela-Italic-v_1_787-TTF-VF.ttf")
 drums = MidiReader("demos/pz2/pz2_MIDI_new.mid", duration=900, bpm=82, fps=30)[0]
 # wav playing still doesn't work yet
-wav = __sibling__("../demos/pz2/pz2_amp.wav")
-audio = Wavfile("demos/pz2/pz2_amp.wav")
+wav = __sibling__("../demos/pz2/pz2.wav")
+audio = Wavfile("demos/pz2/pz2.wav")
 
 wSize = 1500
 
