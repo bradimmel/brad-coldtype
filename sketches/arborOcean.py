@@ -9,8 +9,6 @@ rs1 = random_series(0, 100)
 
 @animation((1080,1920), timeline=tl)
 def arbor01(f):
-    l = f.a.progress(f.i, loops=32, easefn="ceio")
-
 
     circleRad = 350
     circle = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-circleRad))
@@ -72,7 +70,15 @@ def arbor01(f):
                 LatA[i][0][j].offset_y(-10)
             
             # j+i stuff is a little silly but gets me good random movement stuff!
-            LatA[i][0][j].rotate(f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio").e*10+rs1[j+i]/10)
+            occLoopsSeed = (i+j)*2
+            sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
+            LatA[i][0][j].rotate(+rs1[j+i]/10)
+            occLoops = [occLoopsSeed,occLoopsSeed+1]
+            for k in range(30):     # 100 just to dirtily cover everything
+                occLoops.append(occLoopsSeed + k*6)
+                occLoops.append(occLoopsSeed + k*6 + 1)
+            if sandTxtLoop.loop in occLoops:
+                LatA[i][0][j].rotate(sandTxtLoop.e*20)
 
     
     
@@ -87,24 +93,16 @@ def arbor01(f):
         .pmap(lambda i, p: 
         (p.flatten(2)
             .nlt(warp_fn(f.i*10, f.i*10, mult=2))))
-        .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.8)))
+        .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
     )
 
     sand = DATPens().rect(Rect(1080,500)).f(hsl(.18,1,.85))
     
     ocean.pmap(lambda i, p: 
         (p.flatten(1)
-            .nlt(warp_fn(f.i*10, f.i*10, mult=15))))
+            .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
 
-    # beach[1].f(hsl(.9,1,.85))
-    # beach[2].f(hsl(.5,1,.8))
-    # beach[3].f(hsl(.18,1,.85))
-    # beach[4].f(hsl(.18,1,.85))
-    # beach.scale(1,1.5).offset_y(-100)
-    # beach.pmap(lambda i, p: 
-    #         (p.flatten(3)
-    #             .nlt(warp_fn(f.i*10, f.i*10, mult=30))))
 
     return (
         # beach!
