@@ -12,7 +12,7 @@ a = DP().rect(r.inset(-100, 850)).offset_y(-250).flatten(10).roughen(350, seed=3
 b = DP().rect(r.inset(-100, 850)).offset_y(-250).flatten(10).roughen(350, seed=1)
 
 rs1 = random_series(0, 100)
-sunProgress = 0
+# sunProgress = 0
 
 starPoints = []
 starCount = 100
@@ -23,11 +23,11 @@ for i in range(starCount):
 @animation((r), solo=1,  timeline=tl)
 def arborOceanSunset(f):
     sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
-    global sunProgress
+    # global sunProgress
     tideLoop = f.a.progress(f.i/2, loops=6, easefn="ceio")
     # manual reset for render
-    if f.i == 0:
-        sunProgress = 0
+    # if f.i == 0:
+    #     sunProgress = 0
     circleRad = 350
     circle = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-circleRad))
     squiggle = (DATPen().sine(f.a.r.inset(-400,f.a.r.mxy/2-30), 5)).offset_x(-350)
@@ -244,7 +244,7 @@ def arborOceanSunset(f):
 
     sunTextRadOffset = 18
     sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,sunY).reverse()
-    sunProgress += sunLoop.e
+    # sunProgress += sunLoop.e
 
     sunText = (StyledString("Friday 7PM "*20,
         Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
