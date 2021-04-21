@@ -6,10 +6,14 @@ vulfBlack = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
 vulfBold = Font("../assets/VulfMono/VulfMonoDemo-BoldItalic.otf")
 tl = Timeline(800)
 
+r = Rect(1080,1920)
+a = DP().rect(r.inset(-100, 850)).offset_y(-250).flatten(10).roughen(350, seed=3)
+b = DP().rect(r.inset(-100, 850)).offset_y(-250).flatten(10).roughen(350, seed=1)
+
 rs1 = random_series(0, 100)
 sunProgress = 0
 
-@animation((1080,1920), timeline=tl)
+@animation((r), timeline=tl)
 def arborOcean(f):
     sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
     global sunProgress
@@ -33,8 +37,6 @@ def arborOcean(f):
             .nlt(warp_fn(0, f.i*10, mult=10))))
         
         )
-
-    
 
     CBShadow = CB.copy().offset(-4,-6).f(hsl(1,1,1))
 
@@ -97,28 +99,56 @@ def arborOcean(f):
 
     
     
-    sky = DATPens().rect(Rect(1080,1920)).f(hsl(.9,1,.88)).scale(1.1)
-    ocean = DATPens().rect(Rect(1080,600)).f(hsl(.6,1,.7)).scale(1.1,1).offset_y(400)
+    sky = (DATPens().rect(Rect(1080,1920))
+    #.f(Gradient.Vertical(Rect(1080,600).offset_y(1000), hsl(0.9 , 1, 0.88), hsl(1, 1, 0.85)))
+    .f(hsl(0.9, 1, 0.85))
+    .scale(1.1)
+    )
+
+    ocean = (DATPens().rect(Rect(1080,600))
+    .scale(1.1,1)
+    .f(Gradient.Vertical(Rect(1080,600).offset_y(500), hsl(0.6 , 1, 0.7), hsl(0.53, 1, 0.8)))
+    #.f(hsl(0.6 , 1, 0.75))
+    .offset_y(400)
+    )
+    
+    # waterShimmer = (DP.Interpolate([a, b], f.a.progress(f.i, loops=1, easefn="seio").e)
+    #         .f(None)
+    #         .smooth()
+    #         .s(1).sw(1)
+    #         .phototype(f.a.r, blur=10, cut=40, cutw=20, fill=(hsl(.6,1,.73)))
+    #         )
+    
+    
     sun = (DATPens()
         .oval(f.a.r.inset(f.a.r.mxx/2-200,f.a.r.mxy/2-200))
-        .f(hsl(1,1,1))
+        #.f(Gradient.Vertical(Rect(1080,600).offset_y(800), hsl(0.2 , 1, 0.7), hsl(0, 1, 0.8)))
+        .f(hsl(0.12, 1, 0.8))
         .translate(300,80) 
         .pmap(lambda i, p: 
         (p.flatten(2)
             .nlt(warp_fn(f.i*10, f.i*10, mult=2))))
-        .phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
+        #.phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
     )
 
-    sand = DATPens().rect(Rect(1080,500)).f(hsl(.18,1,.85))
+    sand = (DATPens().rect(Rect(1200,500))
+    .scale(2,1)
+    #.f(Gradient.Vertical(Rect(1080,400), hsl(0.16 , 1, 0.78), hsl(0.16, 1, 0.85)))
+    .f(hsl(0.16, 1,  0.82))
+    )
     
     ocean.pmap(lambda i, p: 
+        (p.flatten(1)
+            .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
+
+    sand.pmap(lambda i, p: 
         (p.flatten(1)
             .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
 
     sunTextRadOffset = 18
     sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,80).reverse()
-    sunProgress += sunLoop.e 
+    sunProgress += sunLoop.e
 
     sunText = (StyledString("Friday 7PM "*20,
         Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
@@ -135,8 +165,9 @@ def arborOcean(f):
         (sky),
         (sun),
         (sunText),
-        (sand),
         (ocean),
+        # (waterShimmer),
+        (sand),
 
         (CBShadow),
         (CB),
