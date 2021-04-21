@@ -21,7 +21,7 @@ for i in range(starCount):
     starPoints.append((pyRandom.randint(0,1080-starSize),(pyRandom.randint(1000,1920-starSize))))
 
 @animation((r), solo=1,  timeline=tl)
-def arborOcean(f):
+def arborOceanSunset(f):
     sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
     global sunProgress
     tideLoop = f.a.progress(f.i/2, loops=6, easefn="ceio")
@@ -136,7 +136,7 @@ def arborOcean(f):
                 LatA[i][0][j].rotate(sandTxtLoop.e*20)
 
             if f.i > sunsetEnd + rs1[n]:
-                LatA[i][0][j].rotate(crabLoop.e%0.001 * 30000 * crabLoop.e)
+                LatA[i][0][j].rotate(crabLoop.e%0.001 * 20000 * crabLoop.e)
                 LatA[i][0][j].scale(max(0, (1-(f.i-(sunsetEnd + rs1[n]))*.01)))
 
             n += 1
@@ -280,4 +280,4 @@ def arborOcean(f):
 
 
 def release(passes):
-    FFMPEGExport(arborOcean, passes).gif().write()
+    FFMPEGExport(arborOceanSunset, passes).gif().write()
