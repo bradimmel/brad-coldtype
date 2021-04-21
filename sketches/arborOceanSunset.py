@@ -1,5 +1,6 @@
 from coldtype import *
 from coldtype.warping import warp_fn
+import random as pyRandom
 
 mutator = Font("../assets/MutatorSans.ttf")
 vulfBlack = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
@@ -12,6 +13,12 @@ b = DP().rect(r.inset(-100, 850)).offset_y(-250).flatten(10).roughen(350, seed=1
 
 rs1 = random_series(0, 100)
 sunProgress = 0
+
+starPoints = []
+starCount = 100
+starSize = 5
+for i in range(starCount):
+    starPoints.append((pyRandom.randint(0,1080-starSize),(pyRandom.randint(1000,1920-starSize))))
 
 @animation((r), solo=1,  timeline=tl)
 def arborOcean(f):
@@ -93,13 +100,13 @@ def arborOcean(f):
             sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
             LatA[i][0][j].rotate(+rs1[j+i]/10)
             occLoops = [occLoopsSeed,occLoopsSeed+1]
-            for k in range(130):     # 30 just to dirtily cover everything
+            for k in range(100):     # 100 just to dirtily cover everything
                 occLoops.append(occLoopsSeed + k*6)
                 occLoops.append(occLoopsSeed + k*6 + 1)
             if sandTxtLoop.loop in occLoops:
                 LatA[i][0][j].rotate(sandTxtLoop.e*20)
 
-    #sunset
+    # sunset mechanics
     sunsetStart = 200
     sunsetEnd = 400
     skyColor = hsl(0.9, 1, 0.88)
@@ -128,6 +135,36 @@ def arborOcean(f):
     .f(skyColor)
     .scale(1.1)
     )
+
+    # stars
+    
+    stars = DATPens()
+
+    for i in range(starCount):
+        starPointx = starPoints[i][0]
+        starPointy = starPoints[i][1]
+        starRect = Rect([starPointx, starPointy, starSize, starSize])
+        stars.append(
+            DATPen()
+            .rect(starRect)
+            .f(hsl(skyColor.h,0,skyColor.l+(f.i-sunsetEnd)/100))       
+            )
+
+    for i in range(len(stars)):
+
+        if f.i < sunsetEnd:
+            stars[i].scale(0)
+            continue
+            
+        # j+i stuff is a little silly but gets me good random movement stuff!
+        occLoopsSeed = (i+j)*2
+        starLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
+        occLoops = [occLoopsSeed,occLoopsSeed+1]
+        for k in range(100):     # 100 just to dirtily cover everything
+            occLoops.append(occLoopsSeed + k*6)
+            occLoops.append(occLoopsSeed + k*6 + 1)
+        if starLoop.loop in occLoops:
+            stars[i].scale(starLoop.e)
 
 
     tide = tideLoop.e/4 * ((math.floor((tideLoop.loop+2)/2)%4)/4)
@@ -204,6 +241,7 @@ def arborOcean(f):
     return (
         # beach!
         (sky),
+        (stars),
         (sun),
         (sunText),
         
