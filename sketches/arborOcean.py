@@ -17,6 +17,7 @@ sunProgress = 0
 def arborOcean(f):
     sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
     global sunProgress
+    tideLoop = f.a.progress(f.i/2, loops=8, easefn="ceio")
     # manual reset for render
     if f.i == 0:
         sunProgress = 0
@@ -111,6 +112,10 @@ def arborOcean(f):
     .f(Gradient.Vertical(Rect(1080,600).offset_y(500), hsl(0.6 , 1, 0.7), hsl(0.53, 1, 0.8)))
     #.f(hsl(0.6 , 1, 0.75))
     .offset_y(400)
+    
+    # tide
+    .scale(1, 1+tideLoop.e/10)
+    .offset_y(-600*(tideLoop.e/10)/2)
     )
     
     # waterShimmer = (DP.Interpolate([a, b], f.a.progress(f.i, loops=1, easefn="seio").e)
@@ -143,9 +148,9 @@ def arborOcean(f):
         (p.flatten(1)
             .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
-    sand.pmap(lambda i, p: 
-        (p.flatten(1)
-            .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
+    # sand.pmap(lambda i, p: 
+    #     (p.flatten(1)
+    #         .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
     sunReflection = (sun[0].copy()
         .offset(0,-30).skew(-.1)
@@ -175,10 +180,12 @@ def arborOcean(f):
         (sky),
         (sun),
         (sunText),
-        (ocean),
+        
         #(sunReflection),
         # (waterShimmer),
         (sand),
+        (LatA),
+        (ocean),
 
         (CBShadow
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
@@ -186,8 +193,7 @@ def arborOcean(f):
         (CB
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(.6,1,.82)))
         ),
-        (LatA)
-        )
+    )
 
 
 def release(passes):
