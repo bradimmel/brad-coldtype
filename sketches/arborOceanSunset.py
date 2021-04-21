@@ -124,22 +124,20 @@ def arborOcean(f):
                 LatA[i][0][j].offset_y(-10)
                 
 
-            if f.i < sunsetEnd:
-                # j+i stuff is a little silly but gets me good random movement stuff!
-                sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
-                LatA[i][0][j].rotate(+rs1[j+i]/10)
-                occLoops = [occLoopsSeed,occLoopsSeed+1]
-                for k in range(100):     # 100 just to dirtily cover everything
-                    occLoops.append(occLoopsSeed + k*6)
-                    occLoops.append(occLoopsSeed + k*6 + 1)
-                if sandTxtLoop.loop in occLoops:
-                    LatA[i][0][j].rotate(sandTxtLoop.e*20)
 
-            else:
-                
-                if f.i > sunsetEnd + rs1[n]:
-                    LatA[i][0][j].rotate(crabLoop.e%0.001 * 20000 * crabLoop.e)
-                    LatA[i][0][j].scale(max(0, (1-(f.i-(sunsetEnd + rs1[n]))*.01)))
+            # j+i stuff is a little silly but gets me good random movement stuff!
+            sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
+            LatA[i][0][j].rotate(+rs1[j+i]/10)
+            occLoops = [occLoopsSeed,occLoopsSeed+1]
+            for k in range(100):     # 100 just to dirtily cover everything
+                occLoops.append(occLoopsSeed + k*6)
+                occLoops.append(occLoopsSeed + k*6 + 1)
+            if sandTxtLoop.loop in occLoops:
+                LatA[i][0][j].rotate(sandTxtLoop.e*20)
+
+            if f.i > sunsetEnd + rs1[n]:
+                LatA[i][0][j].rotate(crabLoop.e%0.001 * 20000 * crabLoop.e)
+                LatA[i][0][j].scale(max(0, (1-(f.i-(sunsetEnd + rs1[n]))*.01)))
 
             n += 1
 
@@ -173,18 +171,18 @@ def arborOcean(f):
 
     for i in range(len(stars)):
 
-        if f.i < sunsetEnd or (rs1[i]) > f.i-sunsetEnd:
+        if f.i < sunsetEnd + (rs1[i]):
             stars[i].scale(0)
             continue
             
-        occLoopsSeed = (i)
-        starLoop = f.a.progress(f.i - (i*10), loops=16, easefn="ceio")
+        occLoopsSeed = (i%4)*2
+        starLoop = f.a.progress(f.i - (i*10), loops=18, easefn="ceio")
         occLoops = [occLoopsSeed,occLoopsSeed+1]
-        for k in range(100):     # 100 just to dirtily cover everything
-            occLoops.append(math.floor(occLoopsSeed/10) + k*2)
-            occLoops.append(math.floor(occLoopsSeed/10) + k*2 + 1)
+        for k in range(10):     # dirtily cover everything
+            occLoops.append(math.floor(occLoopsSeed) + k*2)
+            occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
         if starLoop.loop in occLoops:
-            stars[i].scale(.5+starLoop.e/2)
+            stars[i].scale(1-(starLoop.e)/2)
 
 
     tide = tideLoop.e/4 * ((math.floor((tideLoop.loop+2)/2)%4)/4)
