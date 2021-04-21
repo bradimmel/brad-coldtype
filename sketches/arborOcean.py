@@ -17,7 +17,7 @@ sunProgress = 0
 def arborOcean(f):
     sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
     global sunProgress
-    tideLoop = f.a.progress(f.i/2, loops=8, easefn="ceio")
+    tideLoop = f.a.progress(f.i/2, loops=5, easefn="ceio")
     # manual reset for render
     if f.i == 0:
         sunProgress = 0
@@ -170,7 +170,8 @@ def arborOcean(f):
         .fit(sunCirc.length())
         .pens()
         .f(hsl(1,1,1))
-        .distribute_on_path(sunCirc, offset= -1000 + sunProgress * 2)
+        #.distribute_on_path(sunCirc, offset= -1000 + sunProgress * 2)
+        .distribute_on_path(sunCirc, offset= f.i - 1000)
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
         )
 
