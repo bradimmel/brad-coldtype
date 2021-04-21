@@ -99,11 +99,33 @@ def arborOcean(f):
             if sandTxtLoop.loop in occLoops:
                 LatA[i][0][j].rotate(sandTxtLoop.e*20)
 
+    #sunset
+    sunsetStart = 200
+    sunsetEnd = 400
+    skyColor = hsl(0.9, 1, 0.88)
+    sunColor = hsl(0.12, 1, 0.8)
+    sunY = 80
+    oceanColorTop = hsl(0.6 , 1, 0.7)
+    oceanColorBottom = hsl(0.53, 1, 0.85)
+
+    if f.i > sunsetStart:
+        skyColor = hsl(0.9-(f.i-sunsetStart)/1000, 1, 0.88-(f.i-sunsetStart)/300)
+        sunColor = hsl(0.12-(f.i-sunsetStart)/1400, 1, 0.8-(f.i-sunsetStart)/1400)
+        sunY = 80-(f.i-sunsetStart)*1.5
+        oceanColorTop = hsl(0.6+(f.i-sunsetStart)/1400, 1, 0.7-(f.i-sunsetStart)/900)
+        oceanColorBottom = hsl(0.53+(f.i-sunsetStart)/1400, 1, 0.85-(f.i-sunsetStart)/1400)
+    if sunsetEnd < f.i < 800:
+        skyColor = hsl(0.9-(sunsetEnd-sunsetStart)/1000, 1, 0.88-(sunsetEnd-sunsetStart)/300)
+        sunColor = hsl(0.12-(sunsetEnd-sunsetStart)/1400, 1, 0.8-(sunsetEnd-sunsetStart)/1400)
+        sunY = 80-(sunsetEnd-sunsetStart)*1.5
+        oceanColorTop = hsl(0.6+(sunsetEnd-sunsetStart)/1400, 1, 0.7-(sunsetEnd-sunsetStart)/900)
+        oceanColorBottom = hsl(0.53+(sunsetEnd-sunsetStart)/1400, 1, 0.85-(sunsetEnd-sunsetStart)/1400)
+    
     
     
     sky = (DATPens().rect(Rect(1080,1920))
     #.f(Gradient.Vertical(Rect(1080,600).offset_y(1000), hsl(0.9 , 1, 0.88), hsl(1, 1, 0.85)))
-    .f(hsl(0.9, 1, 0.88))
+    .f(skyColor)
     .scale(1.1)
     )
 
@@ -112,7 +134,7 @@ def arborOcean(f):
 
     ocean = (DATPens().rect(Rect(1080,600))
     .scale(1.1,1)
-    .f(Gradient.Vertical(Rect(1080,600).offset_y(500), hsl(0.6 , 1, 0.7), hsl(0.53, 1, 0.85)))
+    .f(Gradient.Vertical(Rect(1080,600).offset_y(500), oceanColorTop, oceanColorBottom))
     #.f(hsl(0.6 , 1, 0.75))
     .offset_y(400)
     
@@ -129,12 +151,11 @@ def arborOcean(f):
     #         .phototype(f.a.r, blur=10, cut=40, cutw=20, fill=(hsl(.6,1,.73)))
     #         )
     
-    
     sun = (DATPens()
         .oval(f.a.r.inset(f.a.r.mxx/2-200,f.a.r.mxy/2-200))
         #.f(Gradient.Vertical(Rect(1080,600).offset_y(800), hsl(0.2 , 1, 0.7), hsl(0, 1, 0.8)))
-        .f(hsl(0.12, 1, 0.8))
-        .translate(300,80) 
+        .f(sunColor)
+        .translate(300,sunY) 
         .pmap(lambda i, p: 
         (p.flatten(2)
             .nlt(warp_fn(f.i*10, f.i*10, mult=2))))
@@ -166,7 +187,7 @@ def arborOcean(f):
     )
 
     sunTextRadOffset = 18
-    sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,80).reverse()
+    sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,sunY).reverse()
     sunProgress += sunLoop.e
 
     sunText = (StyledString("Friday 7PM "*20,
