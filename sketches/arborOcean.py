@@ -30,7 +30,7 @@ def arborOcean(f):
         Style(vulfBold, 90, wght=800, wdth=200, tu=0, space=800))
         .pens()
         .f(hsl(1,1,1))
-        .distribute_on_path(squiggle, offset=3*f.i-100)
+        .distribute_on_path(squiggle, offset=-2.6*f.i+1900)
         .offset(0,600)
         
         .pmap(lambda i, p: 
