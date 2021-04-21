@@ -33,6 +33,31 @@ def arborOcean(f):
     squiggle = (DATPen().sine(f.a.r.inset(-400,f.a.r.mxy/2-30), 5)).offset_x(-350)
     squiggle2 = (DATPen().sine(f.a.r.inset(-200,f.a.r.mxy/2-30), 3))
     
+    # sunset mechanics
+    sunsetStart = 200
+    sunsetEnd = 400
+    skyColor = hsl(0.9, 1, 0.88)
+    sunColor = hsl(0.12, 1, 0.8)
+    sunY = 80
+    oceanColorTop = hsl(0.6 , 1, 0.7)
+    oceanColorBottom = hsl(0.53, 1, 0.85)
+
+    if f.i > sunsetStart:
+        skyColor = hsl(0.9-(f.i-sunsetStart)/1000, 1, 0.88-(f.i-sunsetStart)/300)
+        sunColor = hsl(0.12-(f.i-sunsetStart)/1400, 1, 0.8-(f.i-sunsetStart)/1400)
+        sunY = 80-(f.i-sunsetStart)*1.5
+        oceanColorTop = hsl(0.6+(f.i-sunsetStart)/1400, 1, 0.7-(f.i-sunsetStart)/900)
+        oceanColorBottom = hsl(0.53+(f.i-sunsetStart)/1400, 1, 0.85-(f.i-sunsetStart)/1400)
+    if sunsetEnd < f.i < 800:
+        skyColor = hsl(0.9-(sunsetEnd-sunsetStart)/1000, 1, 0.88-(sunsetEnd-sunsetStart)/300)
+        sunColor = hsl(0.12-(sunsetEnd-sunsetStart)/1400, 1, 0.8-(sunsetEnd-sunsetStart)/1400)
+        sunY = 80-(sunsetEnd-sunsetStart)*1.5
+        oceanColorTop = hsl(0.6+(sunsetEnd-sunsetStart)/1400, 1, 0.7-(sunsetEnd-sunsetStart)/900)
+        oceanColorBottom = hsl(0.53+(sunsetEnd-sunsetStart)/1400, 1, 0.85-(sunsetEnd-sunsetStart)/1400)
+    
+
+
+
     CB = (StyledString("Claire Brooks",
         Style(vulfBold, 90, wght=800, wdth=200, tu=0, space=800))
         .pens()
@@ -88,46 +113,40 @@ def arborOcean(f):
     LatA.offset_y(40)
 
 
+    crabLoop = f.a.progress(f.i, loops=18, easefn="eeio")
+    n = 0
     for i in range(len(LatA)):
         for j in range(len(LatA[i][0])):
-            if j % 2 == 0:
-                LatA[i][0][j].offset_y(10)
-            else:
-                LatA[i][0][j].offset_y(-10)
-            
-            # j+i stuff is a little silly but gets me good random movement stuff!
             occLoopsSeed = (i+j)*2
-            sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
-            LatA[i][0][j].rotate(+rs1[j+i]/10)
-            occLoops = [occLoopsSeed,occLoopsSeed+1]
-            for k in range(100):     # 100 just to dirtily cover everything
-                occLoops.append(occLoopsSeed + k*6)
-                occLoops.append(occLoopsSeed + k*6 + 1)
-            if sandTxtLoop.loop in occLoops:
-                LatA[i][0][j].rotate(sandTxtLoop.e*20)
+            if f.i < sunsetEnd:
+                if j % 2 == 0:
+                    LatA[i][0][j].offset_y(10)
+                else:
+                    LatA[i][0][j].offset_y(-10)
+                
+                # j+i stuff is a little silly but gets me good random movement stuff!
+                sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
+                LatA[i][0][j].rotate(+rs1[j+i]/10)
+                occLoops = [occLoopsSeed,occLoopsSeed+1]
+                for k in range(100):     # 100 just to dirtily cover everything
+                    occLoops.append(occLoopsSeed + k*6)
+                    occLoops.append(occLoopsSeed + k*6 + 1)
+                if sandTxtLoop.loop in occLoops:
+                    LatA[i][0][j].rotate(sandTxtLoop.e*20)
 
-    # sunset mechanics
-    sunsetStart = 200
-    sunsetEnd = 400
-    skyColor = hsl(0.9, 1, 0.88)
-    sunColor = hsl(0.12, 1, 0.8)
-    sunY = 80
-    oceanColorTop = hsl(0.6 , 1, 0.7)
-    oceanColorBottom = hsl(0.53, 1, 0.85)
+            else:
+                
+                if f.i > sunsetEnd + rs1[n]:
+                    LatA[i][0][j].rotate(crabLoop.e%0.001 * 10000 * crabLoop.e)
+                    LatA[i][0][j].scale(1-(f.i-(sunsetEnd + rs1[n]))*.01)
 
-    if f.i > sunsetStart:
-        skyColor = hsl(0.9-(f.i-sunsetStart)/1000, 1, 0.88-(f.i-sunsetStart)/300)
-        sunColor = hsl(0.12-(f.i-sunsetStart)/1400, 1, 0.8-(f.i-sunsetStart)/1400)
-        sunY = 80-(f.i-sunsetStart)*1.5
-        oceanColorTop = hsl(0.6+(f.i-sunsetStart)/1400, 1, 0.7-(f.i-sunsetStart)/900)
-        oceanColorBottom = hsl(0.53+(f.i-sunsetStart)/1400, 1, 0.85-(f.i-sunsetStart)/1400)
-    if sunsetEnd < f.i < 800:
-        skyColor = hsl(0.9-(sunsetEnd-sunsetStart)/1000, 1, 0.88-(sunsetEnd-sunsetStart)/300)
-        sunColor = hsl(0.12-(sunsetEnd-sunsetStart)/1400, 1, 0.8-(sunsetEnd-sunsetStart)/1400)
-        sunY = 80-(sunsetEnd-sunsetStart)*1.5
-        oceanColorTop = hsl(0.6+(sunsetEnd-sunsetStart)/1400, 1, 0.7-(sunsetEnd-sunsetStart)/900)
-        oceanColorBottom = hsl(0.53+(sunsetEnd-sunsetStart)/1400, 1, 0.85-(sunsetEnd-sunsetStart)/1400)
-    
+            n += 1
+
+
+
+
+
+
     
     
     sky = (DATPens().rect(Rect(1080,1920))
