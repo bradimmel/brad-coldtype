@@ -34,8 +34,8 @@ def arborOcean(f):
     squiggle2 = (DATPen().sine(f.a.r.inset(-200,f.a.r.mxy/2-30), 3))
     
     # sunset mechanics
-    sunsetStart = 200
-    sunsetEnd = 400
+    sunsetStart = 150
+    sunsetEnd = 450
     skyColor = hsl(0.9, 1, 0.88)
     sunColor = hsl(0.12, 1, 0.8)
     sunY = 80
@@ -43,17 +43,17 @@ def arborOcean(f):
     oceanColorBottom = hsl(0.53, 1, 0.85)
 
     if f.i > sunsetStart:
-        skyColor = hsl(0.9-(f.i-sunsetStart)/1000, 1, 0.88-(f.i-sunsetStart)/300)
-        sunColor = hsl(0.12-(f.i-sunsetStart)/1400, 1, 0.8-(f.i-sunsetStart)/1400)
-        sunY = 80-(f.i-sunsetStart)*1.5
-        oceanColorTop = hsl(0.6+(f.i-sunsetStart)/1400, 1, 0.7-(f.i-sunsetStart)/900)
-        oceanColorBottom = hsl(0.53+(f.i-sunsetStart)/1400, 1, 0.85-(f.i-sunsetStart)/1400)
+        skyColor = hsl(0.9-(f.i-sunsetStart)/1200, 1, 0.88-(f.i-sunsetStart)/420)
+        sunColor = hsl(0.12-(f.i-sunsetStart)/1600, 1, 0.8-(f.i-sunsetStart)/1800)
+        sunY = 80-(f.i-sunsetStart)*1
+        oceanColorTop = hsl(0.6+(f.i-sunsetStart)/1600, 1, 0.7-(f.i-sunsetStart)/900)
+        oceanColorBottom = hsl(0.53+(f.i-sunsetStart)/1800, 1, 0.85-(f.i-sunsetStart)/1400)
     if sunsetEnd < f.i < 800:
-        skyColor = hsl(0.9-(sunsetEnd-sunsetStart)/1000, 1, 0.88-(sunsetEnd-sunsetStart)/300)
-        sunColor = hsl(0.12-(sunsetEnd-sunsetStart)/1400, 1, 0.8-(sunsetEnd-sunsetStart)/1400)
-        sunY = 80-(sunsetEnd-sunsetStart)*1.5
-        oceanColorTop = hsl(0.6+(sunsetEnd-sunsetStart)/1400, 1, 0.7-(sunsetEnd-sunsetStart)/900)
-        oceanColorBottom = hsl(0.53+(sunsetEnd-sunsetStart)/1400, 1, 0.85-(sunsetEnd-sunsetStart)/1400)
+        skyColor = hsl(0.9-(sunsetEnd-sunsetStart)/1200, 1, 0.88-(sunsetEnd-sunsetStart)/420)
+        sunColor = hsl(0.12-(sunsetEnd-sunsetStart)/1600, 1, 0.8-(sunsetEnd-sunsetStart)/1800)
+        sunY = 80-(sunsetEnd-sunsetStart)*1
+        oceanColorTop = hsl(0.6+(sunsetEnd-sunsetStart)/1600, 1, 0.7-(sunsetEnd-sunsetStart)/900)
+        oceanColorBottom = hsl(0.53+(sunsetEnd-sunsetStart)/1800, 1, 0.85-(sunsetEnd-sunsetStart)/1400)
     
 
 
@@ -113,17 +113,18 @@ def arborOcean(f):
     LatA.offset_y(40)
 
 
-    crabLoop = f.a.progress(f.i, loops=18, easefn="eeio")
+    crabLoop = f.a.progress(f.i, loops=64, easefn="eeio")
     n = 0
     for i in range(len(LatA)):
         for j in range(len(LatA[i][0])):
             occLoopsSeed = (i+j)*2
-            if f.i < sunsetEnd:
-                if j % 2 == 0:
-                    LatA[i][0][j].offset_y(10)
-                else:
-                    LatA[i][0][j].offset_y(-10)
+            if j % 2 == 0:
+                LatA[i][0][j].offset_y(10)
+            else:
+                LatA[i][0][j].offset_y(-10)
                 
+
+            if f.i < sunsetEnd:
                 # j+i stuff is a little silly but gets me good random movement stuff!
                 sandTxtLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
                 LatA[i][0][j].rotate(+rs1[j+i]/10)
@@ -137,8 +138,8 @@ def arborOcean(f):
             else:
                 
                 if f.i > sunsetEnd + rs1[n]:
-                    LatA[i][0][j].rotate(crabLoop.e%0.001 * 10000 * crabLoop.e)
-                    LatA[i][0][j].scale(1-(f.i-(sunsetEnd + rs1[n]))*.01)
+                    LatA[i][0][j].rotate(crabLoop.e%0.001 * 20000 * crabLoop.e)
+                    LatA[i][0][j].scale(max(0, (1-(f.i-(sunsetEnd + rs1[n]))*.01)))
 
             n += 1
 
@@ -177,13 +178,13 @@ def arborOcean(f):
             continue
             
         occLoopsSeed = (i)
-        starLoop = f.a.progress(f.i - (i*10), loops=64, easefn="ceio")
+        starLoop = f.a.progress(f.i - (i*10), loops=16, easefn="ceio")
         occLoops = [occLoopsSeed,occLoopsSeed+1]
         for k in range(100):     # 100 just to dirtily cover everything
             occLoops.append(math.floor(occLoopsSeed/10) + k*2)
             occLoops.append(math.floor(occLoopsSeed/10) + k*2 + 1)
         if starLoop.loop in occLoops:
-            stars[i].scale(.1+starLoop.e)
+            stars[i].scale(.5+starLoop.e/2)
 
 
     tide = tideLoop.e/4 * ((math.floor((tideLoop.loop+2)/2)%4)/4)
