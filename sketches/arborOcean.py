@@ -26,16 +26,15 @@ def arborOcean(f):
     squiggle2 = (DATPen().sine(f.a.r.inset(-200,f.a.r.mxy/2-30), 3))
     
     CB = (StyledString("Claire Brooks",
-        Style(vulfBlack, 90, wght=800, wdth=200, tu=0, space=800))
+        Style(vulfBold, 90, wght=800, wdth=200, tu=0, space=800))
         .pens()
-        .f(hsl(.6,1,.9))
+        .f(hsl(1,1,1))
         .distribute_on_path(squiggle, offset=3*f.i-100)
         .offset(0,600)
         
         .pmap(lambda i, p: 
         (p.flatten(2)
             .nlt(warp_fn(0, f.i*10, mult=10))))
-        
         )
 
     CBShadow = CB.copy().offset(-4,-6).f(hsl(1,1,1))
@@ -78,6 +77,8 @@ def arborOcean(f):
     .f(LatAColor)
     )
 
+    LatA.offset_y(40)
+
 
     for i in range(len(LatA)):
         for j in range(len(LatA[i][0])):
@@ -101,7 +102,7 @@ def arborOcean(f):
     
     sky = (DATPens().rect(Rect(1080,1920))
     #.f(Gradient.Vertical(Rect(1080,600).offset_y(1000), hsl(0.9 , 1, 0.88), hsl(1, 1, 0.85)))
-    .f(hsl(0.9, 1, 0.85))
+    .f(hsl(0.9, 1, 0.88))
     .scale(1.1)
     )
 
@@ -179,8 +180,12 @@ def arborOcean(f):
         # (waterShimmer),
         (sand),
 
-        (CBShadow),
-        (CB),
+        (CBShadow
+        .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
+        ),
+        (CB
+        .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(.6,1,.82)))
+        ),
         (LatA)
         )
 
