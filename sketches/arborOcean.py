@@ -131,6 +131,7 @@ def arborOcean(f):
         #.phototype(f.a.r, blur=20, cut=100, cutw=20,  fill=(hsl(.09,1,.83)))
     )
 
+
     sand = (DATPens().rect(Rect(1200,500))
     .scale(2,1)
     #.f(Gradient.Vertical(Rect(1080,400), hsl(0.16 , 1, 0.78), hsl(0.16, 1, 0.85)))
@@ -145,6 +146,14 @@ def arborOcean(f):
         (p.flatten(1)
             .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
+    sunReflection = (sun[0].copy()
+        .offset(0,-30).skew(-.1)
+        .f(Gradient.Vertical(Rect(1080,600).offset_y(800), hsl(0.15 , .8, 0.7), hsl(0, 1, 0.8)))
+        .reverseDifference(ocean)
+        .xor(ocean)
+        .offset_y(4)
+        .color_phototype(f.a.r, blur=10, cut=120, cutw=45)
+    )
 
     sunTextRadOffset = 18
     sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,80).reverse()
@@ -166,6 +175,7 @@ def arborOcean(f):
         (sun),
         (sunText),
         (ocean),
+        #(sunReflection),
         # (waterShimmer),
         (sand),
 
