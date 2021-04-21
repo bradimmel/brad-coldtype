@@ -157,15 +157,14 @@ def arborOcean(f):
             stars[i].scale(0)
             continue
             
-        # j+i stuff is a little silly but gets me good random movement stuff!
-        occLoopsSeed = (i+j)*2
-        starLoop = f.a.progress(f.i - (i*10+j*5), loops=32, easefn="ceio")
+        occLoopsSeed = (i)
+        starLoop = f.a.progress(f.i - (i*10), loops=64, easefn="ceio")
         occLoops = [occLoopsSeed,occLoopsSeed+1]
         for k in range(100):     # 100 just to dirtily cover everything
-            occLoops.append(occLoopsSeed + k*6)
-            occLoops.append(occLoopsSeed + k*6 + 1)
+            occLoops.append(math.floor(occLoopsSeed/10) + k*2)
+            occLoops.append(math.floor(occLoopsSeed/10) + k*2 + 1)
         if starLoop.loop in occLoops:
-            stars[i].scale(starLoop.e)
+            stars[i].scale(.1+starLoop.e)
 
 
     tide = tideLoop.e/4 * ((math.floor((tideLoop.loop+2)/2)%4)/4)
