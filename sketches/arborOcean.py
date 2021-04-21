@@ -13,11 +13,11 @@ b = DP().rect(r.inset(-100, 850)).offset_y(-250).flatten(10).roughen(350, seed=1
 rs1 = random_series(0, 100)
 sunProgress = 0
 
-@animation((r), timeline=tl)
+@animation((r), solo=1,  timeline=tl)
 def arborOcean(f):
     sunLoop = f.a.progress(f.i/2, loops=16, easefn="qeio")
     global sunProgress
-    tideLoop = f.a.progress(f.i/2, loops=5, easefn="ceio")
+    tideLoop = f.a.progress(f.i/2, loops=6, easefn="ceio")
     # manual reset for render
     if f.i == 0:
         sunProgress = 0
@@ -107,15 +107,19 @@ def arborOcean(f):
     .scale(1.1)
     )
 
+
+    tide = tideLoop.e/4 * ((math.floor((tideLoop.loop+2)/2)%4)/4)
+
     ocean = (DATPens().rect(Rect(1080,600))
     .scale(1.1,1)
-    .f(Gradient.Vertical(Rect(1080,600).offset_y(500), hsl(0.6 , 1, 0.7), hsl(0.53, 1, 0.8)))
+    .f(Gradient.Vertical(Rect(1080,600).offset_y(500), hsl(0.6 , 1, 0.7), hsl(0.53, 1, 0.85)))
     #.f(hsl(0.6 , 1, 0.75))
     .offset_y(400)
     
     # tide
-    .scale(1, 1+tideLoop.e/10)
-    .offset_y(-600*(tideLoop.e/10)/2)
+
+    .scale(1, 1+tide)
+    .offset_y(-600*tide/2)
     )
     
     # waterShimmer = (DP.Interpolate([a, b], f.a.progress(f.i, loops=1, easefn="seio").e)
@@ -153,7 +157,7 @@ def arborOcean(f):
     #         .nlt(warp_fn(f.i*4, f.i*4, mult=15))))
 
     sunReflection = (sun[0].copy()
-        .offset(0,-30).skew(-.1)
+        .offset(0,-30).skew(-.15).scale(1,.7)
         .f(Gradient.Vertical(Rect(1080,600).offset_y(800), hsl(0.15 , .8, 0.7), hsl(0, 1, 0.8)))
         .reverseDifference(ocean)
         .xor(ocean)
@@ -182,11 +186,11 @@ def arborOcean(f):
         (sun),
         (sunText),
         
-        #(sunReflection),
-        # (waterShimmer),
         (sand),
         (LatA),
         (ocean),
+        #(sunReflection),
+        #(waterShimmer),
 
         (CBShadow
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
