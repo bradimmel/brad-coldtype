@@ -147,12 +147,13 @@ def arborOcean(f):
         stars.append(
             DATPen()
             .rect(starRect)
-            .f(hsl(skyColor.h,0,skyColor.l+(f.i-sunsetEnd)/100))       
+            #.f(hsl(skyColor.h,0,skyColor.l+(f.i-sunsetEnd)/100))  
+            .f(1,1,1)     
             )
 
     for i in range(len(stars)):
 
-        if f.i < sunsetEnd:
+        if f.i < sunsetEnd or (rs1[i]) > f.i-sunsetEnd:
             stars[i].scale(0)
             continue
             
