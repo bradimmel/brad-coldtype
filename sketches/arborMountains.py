@@ -3,6 +3,7 @@ from fontTools.misc.transform import Transform
 from coldtype.time.nle.premiere import PremiereTimeline
 from coldtype.warping import warp_fn
 from fontTools.svgLib import SVGPath
+import random as pyRandom
 
 json = Path("~/Desktop/brad-coldtype/sketches/media/arborMountains_coldtype.json").expanduser()
 pt = PremiereTimeline(json) #.retime_for_symbol("a")
@@ -12,6 +13,15 @@ vulfBlack = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
 vulfBold = Font("../assets/VulfMono/VulfMonoDemo-BoldItalic.otf")
 svg_path = Path("~/Desktop/brad-coldtype/assets/river01.svg").expanduser()
 r = Rect(1080,1920)
+
+rs1 = random_series(0, 100)
+
+starPoints = []
+starCount = 100
+starSize = 5
+for i in range(starCount):
+    starPoints.append((pyRandom.randint(0,1080-starSize),(pyRandom.randint(1000,1920-starSize))))
+
 
 @animation(r, solo=1,  timeline=pt)
 def arborMountains(f):
@@ -48,19 +58,53 @@ def arborMountains(f):
     sky = DATPen().rect(r).f(hsl(.7,1,.2))
     landscape = DATPen().rect(Rect(1080,800)).f(hsl(.35,.5,.7))
 
-    letterTestPath = (StyledString("T", 
-    Style(mutator, 1000, wght=80, wdth=200, tu=0, space=800))
+    # constellations
+    rickPath = (StyledString("Rick", 
+    Style(vulfBold, 120, wght=80, wdth=200, tu=0, space=800))
     .pen()
     .align(r)
     )
 
-    letterTest = (StyledString("."*10, 
-    Style(vulfBold, 80, wdth=1, tu=100, space=500))
-    .fit(letterTestPath.length())
-    .pens()
-    .distribute_on_path(letterTestPath, offset=10)
-    .f(1)
+    vandivierPath = (StyledString("Vandivier", 
+    Style(vulfBold, 120, wght=80, wdth=200, tu=0, space=800))
+    .pen()
+    .align(r)
     )
+
+    
+    rickStars = (StyledString("."*300, 
+    Style(vulfBold, 10, wdth=1, tu=100, space=500))
+    #.fit(starWordPath.length())
+    .pens()
+    .distribute_on_path(rickPath, offset=10)
+    .f(1)
+    .offset(-300,800)
+    .rotate(10)
+    )
+
+    vandivierStars = (StyledString("."*500, 
+    Style(vulfBold, 10, wdth=1, tu=100, space=500))
+    #.fit(starWordPath.length())
+    .pens()
+    .distribute_on_path(vandivierPath, offset=10)
+    .f(1)
+    .offset(50,740)
+    .rotate(10)
+    )
+
+    wordStars = DPS(pens=[rickStars, vandivierStars])
+
+    for i in range(len(wordStars)):
+        for j in range(len(wordStars[i])):
+            #wordStars[i].scale(min(1, (f.i-rs1[i])/30))
+            occLoopsSeed = (i%4)*2
+            starLoop = f.a.progress(f.i - rs1[j], loops=18, easefn="ceio")
+            occLoops = [occLoopsSeed,occLoopsSeed+1]
+            for k in range(10):     # dirtily cover everything
+                occLoops.append(math.floor(occLoopsSeed) + k*2)
+                occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
+            if starLoop.loop in occLoops:
+                wordStars[i][j].scale(1-(starLoop.e)/1.8)
 
 
 
@@ -100,7 +144,7 @@ def arborMountains(f):
         (mountain02),
         (riverStreams),
         (riverPath),
-        (letterTestPath),
-        (letterTest),
+        #(letterTestPath),
+        (wordStars),
 
     )
