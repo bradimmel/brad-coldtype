@@ -17,8 +17,8 @@ r = Rect(1080,1920)
 rs1 = random_series(0, 100)
 
 starPoints = []
-starCount = 100
-starSize = 5
+starCount = 200
+starSize = 3
 for i in range(starCount):
     starPoints.append((pyRandom.randint(0,1080-starSize),(pyRandom.randint(1000,1920-starSize))))
 
@@ -57,6 +57,32 @@ def arborMountains(f):
     )
     sky = DATPen().rect(r).f(hsl(.7,1,.2))
     landscape = DATPen().rect(Rect(1080,800)).f(hsl(.35,.5,.7))
+
+    # stars
+    
+    stars = DATPens()
+
+    for i in range(starCount):
+        starPointx = starPoints[i][0]
+        starPointy = starPoints[i][1]
+        starRect = Rect([starPointx, starPointy, starSize, starSize])
+        stars.append(
+            DATPen()
+            .rect(starRect) 
+            .f(1,1,1)     
+            )
+
+    for i in range(len(stars)):
+
+        occLoopsSeed = (i%4)*2
+        starLoop = f.a.progress(f.i - (rs1[i]), loops=18, easefn="ceio")
+        occLoops = [occLoopsSeed,occLoopsSeed+1]
+        for k in range(10):     # dirtily cover everything
+            occLoops.append(math.floor(occLoopsSeed) + k*2)
+            occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
+        if starLoop.loop in occLoops:
+            stars[i].scale(1-(starLoop.e)/1.8)
+
 
     # constellations
     rickPath = (StyledString("Rick", 
@@ -139,12 +165,15 @@ def arborMountains(f):
     return (
         (sky),
         (landscape),
+        (stars),
+        (wordStars),
         (moon),
         (mountain01),
         (mountain02),
         (riverStreams),
         (riverPath),
         #(letterTestPath),
-        (wordStars),
+
+
 
     )
