@@ -72,65 +72,68 @@ def arborMountains(f):
             .f(1,1,1)     
             )
 
-    for i in range(len(stars)):
+    # twinkle
 
-        occLoopsSeed = (i%4)*2
-        starLoop = f.a.progress(f.i - (rs1[i]), loops=18, easefn="ceio")
-        occLoops = [occLoopsSeed,occLoopsSeed+1]
-        for k in range(10):     # dirtily cover everything
-            occLoops.append(math.floor(occLoopsSeed) + k*2)
-            occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
-        if starLoop.loop in occLoops:
-            stars[i].scale(1-(starLoop.e)/1.8)
+    # for i in range(len(stars)):
+
+    #     occLoopsSeed = (i%4)*2
+    #     starLoop = f.a.progress(f.i - (rs1[i]), loops=18, easefn="ceio")
+    #     occLoops = [occLoopsSeed,occLoopsSeed+1]
+    #     for k in range(10):     # dirtily cover everything
+    #         occLoops.append(math.floor(occLoopsSeed) + k*2)
+    #         occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
+    #     if starLoop.loop in occLoops:
+    #         stars[i].scale(1-(starLoop.e)/1.8)
 
 
     # constellations
     rickPath = (StyledString("Rick", 
-    Style(vulfBold, 120, wght=80, wdth=200, tu=0, space=800))
+    Style(vulfBold, 150, wght=80, wdth=200, tu=0, space=800))
     .pen()
     .align(r)
     )
 
     vandivierPath = (StyledString("Vandivier", 
-    Style(vulfBold, 120, wght=80, wdth=200, tu=0, space=800))
+    Style(vulfBold, 150, wght=80, wdth=200, tu=0, space=800))
     .pen()
     .align(r)
     )
 
     
-    rickStars = (StyledString("."*300, 
-    Style(vulfBold, 10, wdth=1, tu=100, space=500))
-    #.fit(starWordPath.length())
+    rickStars = (StyledString("."*150, 
+    Style(vulfBold, 15, wdth=0, tu=400, space=500))
+    #.fit(rickPath.length())
     .pens()
     .distribute_on_path(rickPath, offset=10)
     .f(1)
-    .offset(-300,800)
+    .offset(-300,700)
     .rotate(10)
     )
 
-    vandivierStars = (StyledString("."*500, 
-    Style(vulfBold, 10, wdth=1, tu=100, space=500))
+    vandivierStars = (StyledString("."*350, 
+    Style(vulfBold, 15, wdth=1, tu=400, space=500))
     #.fit(starWordPath.length())
     .pens()
     .distribute_on_path(vandivierPath, offset=10)
     .f(1)
-    .offset(50,740)
+    .offset(50,600)
     .rotate(10)
     )
 
     wordStars = DPS(pens=[rickStars, vandivierStars])
 
-    for i in range(len(wordStars)):
-        for j in range(len(wordStars[i])):
-            #wordStars[i].scale(min(1, (f.i-rs1[i])/30))
-            occLoopsSeed = (i%4)*2
-            starLoop = f.a.progress(f.i - rs1[j], loops=18, easefn="ceio")
-            occLoops = [occLoopsSeed,occLoopsSeed+1]
-            for k in range(10):     # dirtily cover everything
-                occLoops.append(math.floor(occLoopsSeed) + k*2)
-                occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
-            if starLoop.loop in occLoops:
-                wordStars[i][j].scale(1-(starLoop.e)/1.8)
+    # twinkle
+    # for i in range(len(wordStars)):
+    #     for j in range(len(wordStars[i])):
+    #         #wordStars[i].scale(min(1, (f.i-rs1[i])/30))
+    #         occLoopsSeed = (i%4)*2
+    #         starLoop = f.a.progress(f.i - rs1[j], loops=18, easefn="ceio")
+    #         occLoops = [occLoopsSeed,occLoopsSeed+1]
+    #         for k in range(10):     # dirtily cover everything
+    #             occLoops.append(math.floor(occLoopsSeed) + k*2)
+    #             occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
+    #         if starLoop.loop in occLoops:
+    #             wordStars[i][j].scale(1-(starLoop.e)/1.8)
 
 
 
