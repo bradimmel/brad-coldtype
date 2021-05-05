@@ -16,14 +16,14 @@ starPoints = []
 starXs = random_series(0,1080, seed=2)
 starYs = random_series(0,1920, seed=1)
 starCount = 200
-starSize = 3
+starSize = 5
 for i in range(starCount):
     starPoints.append((starXs[i],starYs[i]))
 
 
  
 @animation((1080,1920), timeline=pt)
-def arborPlanetsUfos(f):
+def arborPlanets(f):
     loopNum = 4
     l = f.a.progress(f.i/4, loops=loopNum, easefn="ceio")
     l2 = f.a.progress((f.i-50)/4, loops = loopNum-1, easefn="seio")
@@ -101,13 +101,13 @@ def arborPlanetsUfos(f):
         shaRotate = -200
 
     maiya = ((StyledString(
-        "MAIYA",
+        "MAIYA & JAKE",
         blimeyStyle
         )
         .pens()
         .f(1)
         .align(f.a.r)
-        .translate(-200,500)
+        .translate(-200,600)
         .explode()
         .scale(maiyaScale)
         .rotate(maiyaRotate+f.i/4)
@@ -236,15 +236,15 @@ def arborPlanetsUfos(f):
                 .nlt(warp_fn(f.i*5, f.i*5, mult=10))))
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(.16,1,.8)))
         
-        #psych mode
-        .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl((100+f.i)/50,1,.7)))
+        # psych mode
+        #.phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl((100+f.i)/50,1,.7)))
         )
 
-    #psych mode
-    for i in range(len(LatA)):
-        LatA[i].rotate((f.i*5))
-    for i in range(len(dateAndTime)):
-        dateAndTime[i].rotate((f.i*5))
+    # psych mode
+    # for i in range(len(LatA)):
+    #     LatA[i].rotate((f.i*5))
+    # for i in range(len(dateAndTime)):
+    #     dateAndTime[i].rotate((f.i*5))
 
 
 
@@ -253,21 +253,21 @@ def arborPlanetsUfos(f):
 
         (stars),
         (sun),
-        (ufos),
+        #(ufos),
 
         (maiya
         
-        #.phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl(.1,1,.7)))
+        .phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl(.1,1,.7)))
 
         # psych mode
-        .phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl(f.i/50,1,.7)))
+        #.phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl(f.i/50,1,.7)))
         ),
 
         (sha
-        #.phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl(.1,1,.7)))
+        .phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl(.1,1,.7)))
         
         # psych mode
-        .phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl((210+f.i)/50,1,.7)))
+        #.phototype(f.a.r, cut=100, cutw=100, blur=1, fill=(hsl((210+f.i)/50,1,.7)))
         ),
 
         #(orbit01),
