@@ -48,16 +48,6 @@ def arborMountains(f):
         .f(hsl(.1,.3,.4))
     )
 
-    moonRad = 200
-    moon = (DATPen()
-        .oval(f.a.r.inset(f.a.r.mxx/2-moonRad,f.a.r.mxy/2-moonRad))
-        .f(hsl(.18,0,.85))
-        #.translate(300,500)
-        .translate(300,300)
-    )
-    sky = DATPen().rect(r).f(hsl(.7,1,.2))
-    landscape = DATPen().rect(Rect(1080,800)).f(hsl(.35,.5,.7))
-
     # stars
     
     stars = DATPens()
@@ -88,13 +78,13 @@ def arborMountains(f):
 
     # constellations
     rickPath = (StyledString("Rick", 
-    Style(vulfBold, 150, wght=80, wdth=200, tu=0, space=800))
+    Style(vulfBold, 140, wght=80, wdth=200, tu=0, space=800))
     .pen()
     .align(r)
     )
 
     vandivierPath = (StyledString("Vandivier", 
-    Style(vulfBold, 150, wght=80, wdth=200, tu=0, space=800))
+    Style(vulfBold, 140, wght=80, wdth=200, tu=0, space=800))
     .pen()
     .align(r)
     )
@@ -106,7 +96,7 @@ def arborMountains(f):
     .pens()
     .distribute_on_path(rickPath, offset=10)
     .f(1)
-    .offset(-300,700)
+    .offset(-280-f.i/8,700 - f.i/40)
     .rotate(10)
     )
 
@@ -116,27 +106,52 @@ def arborMountains(f):
     .pens()
     .distribute_on_path(vandivierPath, offset=10)
     .f(1)
-    .offset(50,600)
+    .offset(25+f.i/8,590+f.i/40)
     .rotate(10)
     )
 
     wordStars = DPS(pens=[rickStars, vandivierStars])
 
     # twinkle
-    # for i in range(len(wordStars)):
-    #     for j in range(len(wordStars[i])):
-    #         #wordStars[i].scale(min(1, (f.i-rs1[i])/30))
-    #         occLoopsSeed = (i%4)*2
-    #         starLoop = f.a.progress(f.i - rs1[j], loops=18, easefn="ceio")
-    #         occLoops = [occLoopsSeed,occLoopsSeed+1]
-    #         for k in range(10):     # dirtily cover everything
-    #             occLoops.append(math.floor(occLoopsSeed) + k*2)
-    #             occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
-    #         if starLoop.loop in occLoops:
-    #             wordStars[i][j].scale(1-(starLoop.e)/1.8)
+    for i in range(len(wordStars)):
+        for j in range(len(wordStars[i])):
+            #wordStars[i].scale(min(1, (f.i-rs1[i])/30))
+            occLoopsSeed = (i%4)*2
+            starLoop = f.a.progress(f.i - rs1[j], loops=18, easefn="ceio")
+            occLoops = [occLoopsSeed,occLoopsSeed+1]
+            for k in range(10):     # dirtily cover everything
+                occLoops.append(math.floor(occLoopsSeed) + k*2)
+                occLoops.append(math.floor(occLoopsSeed) + k*2 + 1)
+            if starLoop.loop in occLoops:
+                wordStars[i][j].scale(1-(starLoop.e)/1.8)
 
 
 
+
+    # moon
+
+    moonRad = 200
+    moon = (DATPen()
+        .oval(f.a.r.inset(f.a.r.mxx/2-moonRad,f.a.r.mxy/2-moonRad))
+        .f(hsl(.18,0,.85))
+        #.translate(300,500)
+        .translate(300,300)
+    )
+    sky = DATPen().rect(r).f(hsl(.7,1,.2))
+    landscape = DATPen().rect(Rect(1080,800)).f(hsl(.35,.5,.7))
+
+    moonTextRadOffset = 18
+    moonCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-moonRad - moonTextRadOffset,f.a.r.mxy/2-moonRad - moonTextRadOffset)).translate(300,300).reverse()
+
+    moonText = (StyledString("and friends",
+        Style(vulfBold, 30, wght=800, wdth=0, tu=0, space=500))
+        .fit(moonCirc.length())
+        .pens()
+        .f(hsl(1,1,1))
+        #.distribute_on_path(moonCirc, offset= -1000 + sunProgress * 2)
+        .distribute_on_path(moonCirc, offset= f.i*3 - 160)
+        #.phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
+        )
 
 
     def river(fntSize):
@@ -171,6 +186,7 @@ def arborMountains(f):
         (stars),
         (wordStars),
         (moon),
+        (moonText),
         (mountain01),
         (mountain02),
         (riverStreams),

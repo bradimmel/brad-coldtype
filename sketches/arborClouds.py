@@ -1,17 +1,19 @@
 from coldtype import *
 import random
 from coldtype.warping import warp_fn
+from coldtype.time.nle.premiere import PremiereTimeline
 
 mutator = Font("../assets/MutatorSans.ttf")
-vulf =  Font("../assets/VulfMonoDemo-Italic.otf")
-duration = 450
+vulf =  Font("../assets/VulfMono/VulfMonoDemo-BoldItalic.otf")
+json = Path("~/Desktop/brad-coldtype/sketches/media/arborClouds_coldtype.json").expanduser()
+pt = PremiereTimeline(json)
 
 rs1 = random_series(0, 1000)
  
-@animation((1080,1080), timeline=Timeline(duration))
+@animation((1080,1920), timeline=pt)
 def arborClouds(f):
     loopNum = 16
-    l = f.a.progress(f.i, loops=loopNum, easefn="ceio")
+    l = f.a.progress(f.i+17, loops=loopNum, easefn="ceio")
     l2 = f.a.progress(f.i/4, loops = loopNum, easefn="seio")
     #loopLength = duration/(2*loopNum)
 
@@ -51,8 +53,8 @@ def arborClouds(f):
         .understroke(s=hsl(1, 1, 1), sw=10)
         .skew(-.2)
         .rotate(5)
-        #.translate(-1000+cloudProgress*6,500+cloudProgress/2)
-        .translate(-1000+cloudProgress*6,250+cloudProgress/2)
+        .translate(-1000+cloudProgress*6,500+cloudProgress/2)
+        #.translate(-1000+cloudProgress*6,250+cloudProgress/2)
         )
         )
 
@@ -84,8 +86,8 @@ def arborClouds(f):
         .scale(.8)
         .skew(-.2)
         .rotate(5)
-        #.translate(1100-cloudProgress*6,100-cloudProgress/2)
-        .translate(1100-cloudProgress*6,0-cloudProgress/2)
+        .translate(1100-cloudProgress*6,50-cloudProgress/2)
+        #.translate(1100-cloudProgress*6,0-cloudProgress/2)
         )
     )
 
@@ -141,18 +143,17 @@ def arborClouds(f):
         wdth=400,  
         wght=900,
         tu = infoTracking,
-        kp={"Y/F":1000-midSpace}
+        kp={"Y/E":1000-midSpace}
     )
 
     dateAndTime = (StyledString(
-    "THURSDAYFIVE PM",  
+    "FRIDAYEIGHT PM",  
     infoStyle)
     .pens()
     .align(f.a.r)
     .scale(.5)
-    #.translate(0, -800)
-    .translate(0,-480)
-    #.pmap(shift_counters)
+    .translate(0, -800)
+    #.translate(0,-480)
     .scale(.8,1)
     .f(hsl(.9,1,1))
     #.s(1).sw(7).f(None)

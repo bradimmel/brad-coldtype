@@ -222,7 +222,7 @@ def arborOceanSunset(f):
     sand = (DATPens().rect(Rect(1200,500))
     .scale(2,1)
     #.f(Gradient.Vertical(Rect(1080,400), hsl(0.16 , 1, 0.78), hsl(0.16, 1, 0.85)))
-    .f(hsl(0.16, 1,  0.82))
+    .f(hsl(0.145, 1,  0.85))
     )
     
     ocean.pmap(lambda i, p: 
@@ -246,7 +246,7 @@ def arborOceanSunset(f):
     sunCirc = DATPen().oval(f.a.r.inset(f.a.r.mxx/2-200 - sunTextRadOffset,f.a.r.mxy/2-200 - sunTextRadOffset)).translate(300,sunY).reverse()
     # sunProgress += sunLoop.e
 
-    sunText = (StyledString("Friday 7PM "*20,
+    sunText = (StyledString("Friday 7.30 PM "*20,
         Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
         .fit(sunCirc.length())
         .pens()
@@ -254,6 +254,14 @@ def arborOceanSunset(f):
         #.distribute_on_path(sunCirc, offset= -1000 + sunProgress * 2)
         .distribute_on_path(sunCirc, offset= f.i - 1000)
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
+        )
+
+    dateTime  = (StyledString("04.30.21",
+        Style(vulfBold, 40, wght=800, wdth=0, tu=0, space=500))
+        .pens()
+        .offset(820,20)
+        .f(hsl(1,1,1))
+        .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(skyColor))
         )
 
 
@@ -269,6 +277,7 @@ def arborOceanSunset(f):
         (ocean),
         #(sunReflection),
         #(waterShimmer),
+        (dateTime),
 
         (CBShadow
         .phototype(f.a.r, blur=2, cut=100, cutw=20,  fill=(hsl(1,1,1)))
