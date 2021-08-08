@@ -1,14 +1,15 @@
 from coldtype import *
-
-co = Font("../assets/MutatorSans.ttf")
-
-@renderable((1000, 1000))
-def text_on_a_path_fit(r):
-    circle = DATPen().oval(r.inset(250)).reverse()
-    dps = (StyledString("COLDTYPE COLDTYPE COLDTYPE ", # <-- note the trailing space
-        Style(co, 200, wdth=1, tu=100, space=500))
-        .fit(circle.length()) # <-- the fit & length methods
-        .pens()
-        .distribute_on_path(circle)
-        .f(Gradient.H(circle.bounds(), hsl(0.5, s=0.6), hsl(0.85, s=0.6))))
-    return dps
+f1 = Font("../assets/VulfMono/VulfMonoDemo-BlackItalic.otf")
+@animation(timeline=Timeline(60))
+def test_curves_only(f):
+    e = f.a.progress(f.i, to1=1).e
+    shape = (StyledString("C", Style(f1, 1000, wght=0.5))
+        .pen()
+        .align(f.a.r)
+        .explode()[0])
+    return (DPS([
+        DATText(str(f.i), Style("Times", 30, load_font=0), f.a.r.inset(50)),
+        (shape.copy().f(0, 0.1)),
+        (shape.copy()
+            .subsegment(0, e)
+            .f(None).s(hsl(0.7, 1)).sw(3))]))
